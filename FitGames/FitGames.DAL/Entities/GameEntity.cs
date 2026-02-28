@@ -11,6 +11,7 @@ namespace FitGames.DAL.Entities
         public required Pegi Pegi { get; set; }
         public required Genre Genre { get; set; }
         public string? ImageUrl { get; set; }
+        public ICollection<LibraryEntity> Libraries { get; init; } = new List<LibraryEntity>();
 
     }
 }
