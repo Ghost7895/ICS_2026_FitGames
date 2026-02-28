@@ -11,4 +11,6 @@ public class FitGamesDbContext(DbContextOptions<FitGamesDbContext> options) : Db
 {
     public DbSet<GameEntity> Games => Set<GameEntity>(); 
     public DbSet<LibraryEntity> Libraries => Set<LibraryEntity>();
+    public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<DeveloperEntity> Developers => Set<DeveloperEntity>();
 }
