@@ -15,7 +15,11 @@ namespace FitGames.DAL.Tests
                 Name = "Minecraft",
                 Description = "Block game",
                 Genre = Genre.Sandbox,
-                Pegi = Pegi.Pegi3
+                Pegi = Pegi.Pegi3,
+                Developer = new DeveloperEntity()
+                { 
+                    Name = "Mojang" 
+                }
             };
 
             //  Act
