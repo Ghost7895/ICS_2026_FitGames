@@ -1,6 +1,5 @@
 ﻿using FitGames.DAL.Entities;
 using FitGames.DAL.Enums;
-using FitGames.DAL.Factories;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitGames.DAL.Tests
@@ -9,7 +8,7 @@ namespace FitGames.DAL.Tests
     {
         private async Task<GameEntity> Create_And_Save_Game_Entity(string name = "Minecraft",
             string description = "Block game", Genre genre = Genre.Sandbox, Pegi pegi = Pegi.Pegi3,
-            string devName = "Mojang", string? imgUrl = null, LibraryEntity? lib = null)
+            string devName = "Mojang", string? imgUrl = null)
         {
             GameEntity entity = new()
             {
@@ -24,11 +23,6 @@ namespace FitGames.DAL.Tests
                 ImageUrl = imgUrl,
             };
 
-            if (lib != null)
-            {
-                entity.Libraries.Add(lib);
-            }
-            
             GameDbContextSut.Games.Add(entity);
             await GameDbContextSut.SaveChangesAsync();
 
@@ -106,23 +100,9 @@ namespace FitGames.DAL.Tests
         {
             // Arrange
             const string libraryName = "Ahoj";
-            LibraryEntity library = new()
-            {
-                Name = libraryName,
-            };
-            GameEntity entity = new()
-            {
-                Name = "Minecraft",
-                Description = "Block game",
-                Developer = new DeveloperEntity()
-                {
-                    Name = "mojang",
-                },
-                Genre = Genre.Sandbox,
-                Pegi = Pegi.Pegi3,
-            };
-            GameDbContextSut.Games.Add(entity);
-            await GameDbContextSut.SaveChangesAsync();
+            LibraryEntity library = new() { Name = libraryName };
+            var entity = await Create_And_Save_Game_Entity();
+            
 
             // Act
             entity.Libraries.Add(library);
@@ -131,40 +111,17 @@ namespace FitGames.DAL.Tests
             // Assert
             await using var dbx = base.DbContextFactory.CreateDbContext();
             var entityFromDb = dbx.Games.Include(g => g.Libraries).First(gameEntity => gameEntity.Id == entity.Id);
-            Assert.Equal(libraryName, entityFromDb.Libraries.Single().Name);
+            Assert.Equal(library.Id, entityFromDb.Libraries.Single().Id);
         }
 
         [Fact]
-        public async Task AddNew_Game_With_Libraries()
+        public async Task AddNew_Game_With_Multiple_Libraries()
         {
             // Arrange
-            const string libraryName1 = "Ahoj";
-            const string libraryName2 = "Joha";
             const int amountOfLibraries = 2;
-            LibraryEntity library1 = new()
-            {
-                Name = libraryName1,
-            };
-
-            LibraryEntity library2 = new()
-            {
-                Name = libraryName2,
-            };
-
-            GameEntity entity = new()
-            {
-                Name = "Minecraft",
-                Description = "Block game",
-                Developer = new DeveloperEntity()
-                {
-                    Name = "mojang",
-                },
-                Genre = Genre.Sandbox,
-                Pegi = Pegi.Pegi3,
-            };
-            GameDbContextSut.Games.Add(entity);
-            await GameDbContextSut.SaveChangesAsync();
-
+            LibraryEntity library1 = new() { Name = "libraryName1" };
+            LibraryEntity library2 = new() { Name = "libraryName2" };
+            var entity = await Create_And_Save_Game_Entity();
 
             // Act
             entity.Libraries.Add(library1);
@@ -175,8 +132,8 @@ namespace FitGames.DAL.Tests
             await using var dbx = base.DbContextFactory.CreateDbContext();
             var entityFromDb = dbx.Games.Include(g => g.Libraries).First(gameEntity => gameEntity.Id == entity.Id);
             Assert.Equal(amountOfLibraries, entityFromDb.Libraries.Count);
-            Assert.Contains(entityFromDb.Libraries, l => l.Name == libraryName1);
-            Assert.Contains(entityFromDb.Libraries, l => l.Name == libraryName2);
+            Assert.Contains(entityFromDb.Libraries, l => l.Id == library1.Id);
+            Assert.Contains(entityFromDb.Libraries, l => l.Id == library2.Id);
         }
         [Fact]
         public async Task Update_Game_Name()
@@ -284,6 +241,8 @@ namespace FitGames.DAL.Tests
         {
             // Arrange
             var entity = await Create_And_Save_Game_Entity();
+            var dev = entity.Developer;
+            Assert.Contains(dev.PublishedGames, g => g.Id == entity.Id);
 
             // Act
             GameDbContextSut.Games.Remove(entity);
@@ -292,7 +251,52 @@ namespace FitGames.DAL.Tests
             //assert
             await using var dbx = base.DbContextFactory.CreateDbContext();
             Assert.False(dbx.Games.Any(g => g.Id == entity.Id));
+            Assert.DoesNotContain(dev.PublishedGames, g => g.Id == entity.Id);
         }
 
+        [Fact]
+        public async Task Remove_Library_From_Game()
+        {
+            // Arrange
+            var entity = await Create_And_Save_Game_Entity();
+            LibraryEntity library = new() { Name = "library" };
+            entity.Libraries.Add(library);
+            await GameDbContextSut.SaveChangesAsync();
+
+            // Act
+            entity.Libraries.Remove(library);
+            await GameDbContextSut.SaveChangesAsync();
+
+            // Assert
+            await using var dbx = base.DbContextFactory.CreateDbContext();
+            var entityFromDb = dbx.Games.Include(g => g.Libraries).First(g => g.Id == entity.Id);
+            Assert.DoesNotContain(entityFromDb.Libraries, l => l.Id == library.Id);
+
+        }
+
+        [Fact]
+        public async Task Remove_Game_In_Libraries()
+        {
+            // Arrange
+            var entity = await Create_And_Save_Game_Entity();
+            LibraryEntity library1 = new() { Name = "lib1" };
+            LibraryEntity library2 = new() { Name = "lib2" };
+            entity.Libraries.Add(library1);
+            entity.Libraries.Add(library2);
+            await GameDbContextSut.SaveChangesAsync();
+            Assert.Contains(library1.Games, l => l.Id == entity.Id);
+            Assert.Contains(library2.Games, l => l.Id == entity.Id);
+
+
+            // Act
+            GameDbContextSut.Games.Remove(entity);
+            await GameDbContextSut.SaveChangesAsync();
+
+
+            // Assert
+            Assert.DoesNotContain(library1.Games, l => l.Id == entity.Id);
+            Assert.DoesNotContain(library2.Games, l => l.Id == entity.Id);
+        }
     }
 }
+
