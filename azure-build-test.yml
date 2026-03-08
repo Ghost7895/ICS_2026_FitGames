@@ -1,0 +1,24 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool: # since we develop this project on windows, it is better to test it there too
+  vmImage: windows-latest # can still use ubuntu-latest if we need it for some reason 
+
+steps:
+- task: UseDotNet@2
+  displayName: Install .NET SDK
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'
+
+
+- script: dotnet restore
+  displayName: Restore dependencies
+
+- script: dotnet build FitGames.DAL/FitGames.DAL.csproj --configuration Release
+  displayName: Build project
