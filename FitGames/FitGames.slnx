@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FitGames.DAL.Tests/FitGames.DAL.Tests.csproj" Id="6af18772-b7f4-41ed-8369-47aae07d9888" />
+  <Project Path="FitGames.DAL/FitGames.DAL.csproj" />
+</Solution>
