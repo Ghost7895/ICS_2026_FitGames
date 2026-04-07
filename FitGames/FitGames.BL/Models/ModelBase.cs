@@ -2,7 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace FitGames.BL.Models;
 
-public abstract class ModelBase : ObservableObject
+public abstract partial class ModelBase : ObservableObject
 {
-    public Guid Id { get; set; }
+    [ObservableProperty]
+    public partial Guid Id { get; set; }
 }
