@@ -3,107 +3,45 @@ using System.Reflection;
 using FitGames.BL.Mappers;
 using FitGames.BL.Models;
 using FitGames.DAL.Entities;
-using FitGames.DAL.Mappers;
-using FitGames.DAL.Repositories;
-using FitGames.DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitGames.BL.Facades;
 
-public abstract class
-    FacadeBase<TEntity, TListModel, TDetailModel, TEntityMapper>(
-        IUnitOfWorkFactory unitOfWorkFactory,
-        IModelMapper<TEntity, TListModel, TDetailModel> modelMapper)
+public abstract class FacadeBase<TEntity, TListModel, TDetailModel>
     : IFacade<TEntity, TListModel, TDetailModel>
     where TEntity : class, IEntity
     where TListModel : ModelBase
     where TDetailModel : ModelBase
-    where TEntityMapper : IEntityMapper<TEntity>, new()
 {
-    protected readonly IModelMapper<TEntity, TListModel, TDetailModel> ModelMapper = modelMapper;
-    protected readonly IUnitOfWorkFactory UnitOfWorkFactory = unitOfWorkFactory;
+    protected readonly IModelMapper<TEntity, TListModel, TDetailModel> ModelMapper;
+
+    protected FacadeBase(IModelMapper<TEntity, TListModel, TDetailModel> modelMapper)
+    {
+        ModelMapper = modelMapper;
+    }
 
     protected virtual ICollection<string> IncludesNavigationPathDetail => new List<string>();
 
-    public async Task DeleteAsync(Guid id)
+    public virtual Task DeleteAsync(Guid id)
     {
-        await using IUnitOfWork uow = UnitOfWorkFactory.Create();
-        try
-        {
-            await uow.GetRepository<TEntity, TEntityMapper>().DeleteAsync(id).ConfigureAwait(false);
-            await uow.CommitAsync().ConfigureAwait(false);
-        }
-        catch (DbUpdateException e)
-        {
-            throw new InvalidOperationException("Entity deletion failed.", e);
-        }
+        throw new NotImplementedException();
     }
 
-    public virtual async Task<TDetailModel?> GetAsync(Guid id)
+    public virtual Task<TDetailModel?> GetAsync(Guid id)
     {
-        await using IUnitOfWork uow = UnitOfWorkFactory.Create();
-
-        IQueryable<TEntity> query = uow.GetRepository<TEntity, TEntityMapper>().Get();
-
-        foreach (string includePath in IncludesNavigationPathDetail)
-        {
-            query = query.Include(includePath);
-        }
-
-        TEntity? entity = await query.SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
-
-        return entity is null
-            ? null
-            : ModelMapper.MapToDetailModel(entity);
+        throw new NotImplementedException();
     }
 
-    // Always use paging in production
-    public virtual async Task<IEnumerable<TListModel>> GetAsync()
+    public virtual Task<IEnumerable<TListModel>> GetAsync()
     {
-        await using IUnitOfWork uow = UnitOfWorkFactory.Create();
-        List<TEntity> entities = await uow
-            .GetRepository<TEntity, TEntityMapper>()
-            .Get()
-            .ToListAsync().ConfigureAwait(false);
-
-        return ModelMapper.MapToListModel(entities);
+        throw new NotImplementedException();
     }
 
-    public virtual async Task<TDetailModel> SaveAsync(TDetailModel model)
+    public virtual Task<TDetailModel> SaveAsync(TDetailModel model)
     {
-        TDetailModel result;
-
-        GuardCollectionsAreNotSet(model);
-
-        TEntity entity = ModelMapper.MapToEntity(model);
-
-        await using IUnitOfWork uow = UnitOfWorkFactory.Create();
-        IRepository<TEntity> repository = uow.GetRepository<TEntity, TEntityMapper>();
-
-        if (await repository.ExistsAsync(entity).ConfigureAwait(false))
-        {
-            TEntity updatedEntity = await repository.UpdateAsync(entity).ConfigureAwait(false);
-            result = ModelMapper.MapToDetailModel(updatedEntity);
-        }
-        else
-        {
-            entity.Id = Guid.NewGuid();
-            TEntity insertedEntity = repository.Insert(entity);
-            result = ModelMapper.MapToDetailModel(insertedEntity);
-        }
-
-        await uow.CommitAsync().ConfigureAwait(false);
-
-        return result;
+        throw new NotImplementedException();
     }
 
-    /// <summary>
-    /// This Guard ensures that there is a clear understanding of current infrastructure limitations.
-    /// This version of BL/DAL infrastructure does not support insertion or update of adjacent entities.
-    /// WARN: Does not guard navigation properties.
-    /// </summary>
-    /// <param name="model">Model to be inserted or updated</param>
-    /// <exception cref="InvalidOperationException"></exception>
     private static void GuardCollectionsAreNotSet(TDetailModel model)
     {
         IEnumerable<PropertyInfo> collectionProperties = model
