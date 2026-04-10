@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Reflection;
 
+// This implementaion of FacadeBase in inspired by Cookbook pattern
 namespace FitGames.BL.Facades;
 
 public abstract class
@@ -19,7 +20,7 @@ public abstract class
     where TEntity : class, IEntity
     where TListModel : ModelBase
     where TDetailModel : ModelBase
-    where TEntityMapper : IEntityMapper<TEntity>, new()
+    where TEntityMapper : class, IEntityMapper<TEntity>, new()
 {
     protected readonly IModelMapper<TEntity, TListModel, TDetailModel> ModelMapper = modelMapper;
     protected readonly IUnitOfWorkFactory UnitOfWorkFactory = unitOfWorkFactory;
@@ -114,7 +115,7 @@ public abstract class
 
         foreach (PropertyInfo collectionProperty in collectionProperties)
         {
-            if (collectionProperty.GetValue(model) is IEnumerable collection && collection.Cast<object>().Any())
+            if (collectionProperty.GetValue(model) is ICollection { Count: > 0 })
             {
                 throw new InvalidOperationException(
                     "Current BL and DAL infrastructure disallows insert or update of models with adjacent collections.");

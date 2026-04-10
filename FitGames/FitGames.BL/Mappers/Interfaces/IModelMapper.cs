@@ -1,5 +1,6 @@
 ﻿namespace FitGames.BL.Mappers.Interfaces;
 
+// This code was inspired by Cookbook Mapper Interface
 public interface IModelMapper<TEntity, out TListModel, TDetailModel>
 {
     TListModel MapToListModel(TEntity? entity);
