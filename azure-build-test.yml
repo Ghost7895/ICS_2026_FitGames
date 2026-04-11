@@ -6,8 +6,8 @@
 trigger:
 - main
 
-pool: # since we develop this project on windows, it is better to test it there too
-  vmImage: windows-latest # can still use ubuntu-latest if we need it for some reason 
+pool:
+  vmImage: windows-latest
 
 steps:
 - task: UseDotNet@2
@@ -16,9 +16,8 @@ steps:
     packageType: 'sdk'
     version: '8.0.x'
 
+- script: dotnet restore FitGames/FitGames.DAL/FitGames.DAL.csproj
+  displayName: 'Restore dependencies'
 
-- script: dotnet restore
-  displayName: Restore dependencies
-
-- script: dotnet build FitGames.DAL/FitGames.DAL.csproj --configuration Release
-  displayName: Build project
+- script: dotnet build FitGames/FitGames.DAL/FitGames.DAL.csproj --configuration Release
+  displayName: 'Build project'
