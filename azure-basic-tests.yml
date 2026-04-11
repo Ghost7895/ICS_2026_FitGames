@@ -3,6 +3,10 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+steps:
+- script: dir /s
+  displayName: 'Debug - List all files'
+
 trigger:
 - main
 
