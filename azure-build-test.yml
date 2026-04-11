@@ -16,8 +16,8 @@ steps:
     packageType: 'sdk'
     version: '8.0.x'
 
-- script: dotnet restore FitGames/FitGames.DAL/FitGames.DAL.csproj
-  displayName: 'Restore dependencies'
+- script: dotnet restore FitGames/FitGames.slnx
+  displayName: Restore dependencies
 
-- script: dotnet build FitGames/FitGames.DAL/FitGames.DAL.csproj --configuration Release
-  displayName: 'Build project'
+- script: dotnet build FitGames/FitGames.DAL/FitGames.DAL.csproj --configuration Release --no-restore
+  displayName: Build project
