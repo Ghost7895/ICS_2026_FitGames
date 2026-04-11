@@ -14,10 +14,10 @@ steps:
   displayName: Install .NET SDK
   inputs:
     packageType: 'sdk'
-    version: '8.0.x'
+    version: '10.0.x'
 
-- script: dotnet restore FitGames/FitGames.slnx
+- script: dotnet restore FitGames/FitGames.DAL/FitGames.DAL.csproj
   displayName: Restore dependencies
 
-- script: dotnet test FitGames/FitGames.DAL.Tests/FitGames.DAL.Tests.csproj --configuration Release --no-restore
+- script: dotnet test FitGames/FitGames.DAL.Tests/FitGames.DAL.Tests.csproj --configuration Release
   displayName: Run DAL tests
