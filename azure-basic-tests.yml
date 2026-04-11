@@ -3,10 +3,6 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-steps:
-- script: dir /s
-  displayName: 'Debug - List all files'
-
 trigger:
 - main
 
@@ -15,10 +11,15 @@ pool:
 
 steps:
 - task: UseDotNet@2
-  displayName: Install .NET SDK
+  displayName: 'Install .NET 10 SDK'
   inputs:
     packageType: 'sdk'
     version: '10.x'
+    useGlobalJson: false
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- script: dotnet --version
+  displayName: 'Verify .NET Version'
 
 - script: dotnet restore FitGames/FitGames.DAL.Tests/FitGames.DAL.Tests.csproj
   displayName: 'Restore dependencies'
