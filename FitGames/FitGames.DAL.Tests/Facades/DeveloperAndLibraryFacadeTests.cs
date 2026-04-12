@@ -26,22 +26,6 @@ public class DeveloperFacadeTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task GetAsync_ReturnsAllDevelopers()
-    {
-        // Arrange
-        await CreateAndSaveDeveloperEntity("Developer 1");
-        await CreateAndSaveDeveloperEntity("Developer 2");
-        var facade = CreateDeveloperFacade();
-
-        // Act
-        var result = await facade.GetAsync();
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(2, result.Count());
-    }
-
-    [Fact]
     public async Task GetAsync_WithId_ReturnsDeveloperDetail()
     {
         // Arrange
@@ -54,6 +38,23 @@ public class DeveloperFacadeTests : DbContextTestsBase
         // Assert
         Assert.NotNull(result);
         Assert.Equal("Rockstar Games", result.Name);
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_ReturnsAllDevelopers()
+    {
+        // Arrange
+        await CreateAndSaveDeveloperEntity("Developer 1");
+        await CreateAndSaveDeveloperEntity("Developer 2");
+        var facade = CreateDeveloperFacade();
+
+        // Act
+        var result = await facade.GetPagingAsync(1, 10);
+
+        // Assert
+        Assert.NotNull(result);
+        var devs = result.ToList();
+        Assert.Equal(2, devs.Count);
     }
 
     [Fact]
@@ -166,22 +167,6 @@ public class LibraryFacadeTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task GetAsync_ReturnsAllLibraries()
-    {
-        // Arrange
-        await CreateAndSaveLibraryEntity("Library 1");
-        await CreateAndSaveLibraryEntity("Library 2");
-        var facade = CreateLibraryFacade();
-
-        // Act
-        var result = await facade.GetAsync();
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(2, result.Count());
-    }
-
-    [Fact]
     public async Task GetAsync_WithId_ReturnsLibraryDetail()
     {
         // Arrange
@@ -194,6 +179,23 @@ public class LibraryFacadeTests : DbContextTestsBase
         // Assert
         Assert.NotNull(result);
         Assert.Equal("My Game Collection", result.Name);
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_ReturnsAllLibraries()
+    {
+        // Arrange
+        await CreateAndSaveLibraryEntity("Library 1");
+        await CreateAndSaveLibraryEntity("Library 2");
+        var facade = CreateLibraryFacade();
+
+        // Act
+        var result = await facade.GetPagingAsync(1, 10);
+
+        // Assert
+        Assert.NotNull(result);
+        var libs = result.ToList();
+        Assert.Equal(2, libs.Count);
     }
 
     [Fact]

@@ -41,22 +41,6 @@ public class UserFacadeTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task GetAsync_ReturnsAllUsers()
-    {
-        // Arrange
-        await CreateAndSaveUserEntity("user1", "user1@test.com");
-        await CreateAndSaveUserEntity("user2", "user2@test.com");
-        var facade = CreateUserFacade();
-
-        // Act
-        var result = await facade.GetAsync();
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(2, result.Count());
-    }
-
-    [Fact]
     public async Task GetAsync_WithId_ReturnsUserDetail()
     {
         // Arrange
@@ -77,6 +61,23 @@ public class UserFacadeTests : DbContextTestsBase
         Assert.Equal("john@example.com", result.Email);
         Assert.Equal("John", result.Name);
         Assert.Equal("Doe", result.Surname);
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_ReturnsAllUsers()
+    {
+        // Arrange
+        await CreateAndSaveUserEntity("user1", "user1@test.com");
+        await CreateAndSaveUserEntity("user2", "user2@test.com");
+        var facade = CreateUserFacade();
+
+        // Act
+        var result = await facade.GetPagingAsync(1, 10);
+
+        // Assert
+        Assert.NotNull(result);
+        var users = result.ToList();
+        Assert.Equal(2, users.Count);
     }
 
     [Fact]

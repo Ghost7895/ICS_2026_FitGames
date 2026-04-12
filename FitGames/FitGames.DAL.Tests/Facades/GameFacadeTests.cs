@@ -41,24 +41,6 @@ public class GameFacadeTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task GetAsync_ReturnsAllGames()
-    {
-        // Arrange
-        var game1 = await CreateAndSaveGameEntity("Game 1");
-        var game2 = await CreateAndSaveGameEntity("Game 2");
-        var facade = CreateGameFacade();
-
-        // Act
-        var result = await facade.GetAsync();
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(2, result.Count());
-        Assert.Contains(result, g => g.Name == "Game 1");
-        Assert.Contains(result, g => g.Name == "Game 2");
-    }
-
-    [Fact]
     public async Task GetAsync_WithId_ReturnsGameDetail()
     {
         // Arrange
@@ -80,6 +62,25 @@ public class GameFacadeTests : DbContextTestsBase
         Assert.Equal(Genre.Sandbox, result.Genre);
         Assert.Equal(Pegi.Pegi3, result.Pegi);
         Assert.Equal("Mojang", result.DeveloperName);
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_ReturnsAllGames()
+    {
+        // Arrange
+        var game1 = await CreateAndSaveGameEntity("Game 1");
+        var game2 = await CreateAndSaveGameEntity("Game 2");
+        var facade = CreateGameFacade();
+
+        // Act
+        var result = await facade.GetPagingAsync(1, 10);
+
+        // Assert
+        Assert.NotNull(result);
+        var games = result.ToList();
+        Assert.Equal(2, games.Count);
+        Assert.Contains(games, g => g.Name == "Game 1");
+        Assert.Contains(games, g => g.Name == "Game 2");
     }
 
     [Fact]
