@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FitGames.DAL\FitGames.DAL.csproj" />
+    <ProjectReference Include="..\FitGames.BL\FitGames.BL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
