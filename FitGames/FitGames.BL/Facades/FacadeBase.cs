@@ -61,6 +61,11 @@ public abstract class
 
     public virtual async Task<IEnumerable<TListModel>> GetPagingAsync(int pageNumber = 1, int recordsNumberOnAPage = 50)
     {
+        if (pageNumber < 1)
+        {
+            throw new InvalidOperationException("Page number below 1 detected");
+        }
+
 
         int numberOfRecordsToSkip = (pageNumber - 1) * recordsNumberOnAPage;
 
