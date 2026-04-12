@@ -11,5 +11,4 @@ public record UserEntity : IEntity
 
     public required LibraryEntity Library { get; init; }
 
-
 }
