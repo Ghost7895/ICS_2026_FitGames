@@ -59,13 +59,23 @@ public abstract class
             : ModelMapper.MapToDetailModel(entity);
     }
 
-    // Always use paging in production
-    public virtual async Task<IEnumerable<TListModel>> GetAsync()
+    public virtual async Task<IEnumerable<TListModel>> GetPagingAsync(int pageNumber = 1, int recordsNumberOnAPage = 50)
     {
+        if (pageNumber < 1)
+        {
+            throw new InvalidOperationException("Page number below 1 detected");
+        }
+
+
+        int numberOfRecordsToSkip = (pageNumber - 1) * recordsNumberOnAPage;
+
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
         List<TEntity> entities = await uow
             .GetRepository<TEntity, TEntityMapper>()
             .Get()
+            .OrderBy(e => e.Id)
+            .Skip(numberOfRecordsToSkip)
+            .Take(recordsNumberOnAPage)
             .ToListAsync().ConfigureAwait(false);
 
         return ModelMapper.MapToListModel(entities);

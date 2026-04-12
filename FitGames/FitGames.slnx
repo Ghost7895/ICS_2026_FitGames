@@ -1,5 +1,9 @@
 <Solution>
-  <Project Path="FitGames.BL/FitGames.BL.csproj" />
-  <Project Path="FitGames.DAL.Tests/FitGames.DAL.Tests.csproj" />
+  <Project Path="FitGames.BL/FitGames.BL.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="FitGames.DAL.Tests/FitGames.DAL.Tests.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="FitGames.DAL/FitGames.DAL.csproj" />
 </Solution>
