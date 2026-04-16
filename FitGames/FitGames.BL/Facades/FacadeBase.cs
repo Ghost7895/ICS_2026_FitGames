@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Reflection;
 
-// This implementaion of FacadeBase in inspired by Cookbook pattern
+// This implementation of FacadeBase is inspired by Cookbook pattern
 namespace FitGames.BL.Facades;
 
 public abstract class
@@ -65,7 +65,6 @@ public abstract class
         {
             throw new InvalidOperationException("Page number below 1 detected");
         }
-
 
         int numberOfRecordsToSkip = (pageNumber - 1) * recordsNumberOnAPage;
 
