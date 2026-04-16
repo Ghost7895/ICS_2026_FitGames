@@ -11,6 +11,7 @@ public class GameEntityMapper : IEntityMapper<GameEntity>
         existingEntity.Pegi = newEntity.Pegi;
         existingEntity.Genre = newEntity.Genre;
         existingEntity.ImageUrl = newEntity.ImageUrl;
-        existingEntity.DeveloperId = newEntity.DeveloperId;
+        if (newEntity.DeveloperId != Guid.Empty)
+            existingEntity.DeveloperId = newEntity.DeveloperId;
     }
 }

@@ -4,7 +4,6 @@ using FitGames.BL.Models;
 using FitGames.DAL.Entities;
 using FitGames.DAL.Mappers;
 using FitGames.DAL.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
 
 namespace FitGames.BL.Facades;
 
@@ -22,14 +21,12 @@ public class LibraryFacade(
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
 
         var libraryRepo = uow.GetRepository<LibraryEntity, LibraryEntityMapper>();
-        var library = await libraryRepo.Get()
-            .Include(l => l.Games)
-            .SingleOrDefaultAsync(l => l.Id == libraryId);
+        var library = await libraryRepo.GetByIdAsync(libraryId, new[] { nameof(LibraryEntity.Games) });
 
         if (library == null) throw new InvalidOperationException("Library not found.");
 
         var gameRepo = uow.GetRepository<GameEntity, GameEntityMapper>();
-        var game = await gameRepo.Get().SingleOrDefaultAsync(g => g.Id == gameId);
+        var game = await gameRepo.GetByIdAsync(gameId);
 
         if (game == null) throw new InvalidOperationException("Game not found.");
 
@@ -47,9 +44,7 @@ public class LibraryFacade(
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
 
         var libraryRepo = uow.GetRepository<LibraryEntity, LibraryEntityMapper>();
-        var library = await libraryRepo.Get()
-            .Include(l => l.Games)
-            .SingleOrDefaultAsync(l => l.Id == libraryId);
+        var library = await libraryRepo.GetByIdAsync(libraryId, new[] { nameof(LibraryEntity.Games) });
 
         if (library == null) throw new InvalidOperationException("Library not found.");
 

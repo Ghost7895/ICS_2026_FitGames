@@ -45,14 +45,9 @@ public abstract class
     {
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
 
-        IQueryable<TEntity> query = uow.GetRepository<TEntity, TEntityMapper>().Get();
-
-        foreach (string includePath in IncludesNavigationPathDetail)
-        {
-            query = query.Include(includePath);
-        }
-
-        TEntity? entity = await query.SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
+        TEntity? entity = await uow.GetRepository<TEntity, TEntityMapper>()
+            .GetByIdAsync(id, IncludesNavigationPathDetail)
+            .ConfigureAwait(false);
 
         return entity is null
             ? null
@@ -69,15 +64,17 @@ public abstract class
         int numberOfRecordsToSkip = (pageNumber - 1) * recordsNumberOnAPage;
 
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
-        List<TEntity> entities = await uow
+        IEnumerable<TEntity> entities = await uow
             .GetRepository<TEntity, TEntityMapper>()
-            .Get()
+            .GetAllAsync()
+            .ConfigureAwait(false);
+
+        IEnumerable<TEntity> paged = entities
             .OrderBy(e => e.Id)
             .Skip(numberOfRecordsToSkip)
-            .Take(recordsNumberOnAPage)
-            .ToListAsync().ConfigureAwait(false);
+            .Take(recordsNumberOnAPage);
 
-        return ModelMapper.MapToListModel(entities);
+        return ModelMapper.MapToListModel(paged);
     }
 
     public virtual async Task<TDetailModel> SaveAsync(TDetailModel model)
@@ -99,7 +96,7 @@ public abstract class
         else
         {
             entity.Id = Guid.NewGuid();
-            TEntity insertedEntity = repository.Insert(entity);
+            TEntity insertedEntity = await repository.InsertAsync(entity).ConfigureAwait(false);
             result = ModelMapper.MapToDetailModel(insertedEntity);
         }
 

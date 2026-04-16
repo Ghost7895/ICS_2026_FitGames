@@ -36,7 +36,7 @@ public class UserRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_ReturnsAllUsers()
+    public async Task GetAllAsync_ReturnsAllUsers()
     {
         // Arrange
         var user1 = await CreateAndSaveUserEntity("user1", "user1@test.com");
@@ -44,7 +44,7 @@ public class UserRepositoryTests : DbContextTestsBase
         var repository = CreateUserRepository();
 
         // Act
-        var result = repository.Get().ToList();
+        var result = (await repository.GetAllAsync()).ToList();
 
         // Assert
         Assert.NotEmpty(result);
@@ -53,20 +53,20 @@ public class UserRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_ReturnsEmptyWhenNoUsers()
+    public async Task GetAllAsync_ReturnsEmptyWhenNoUsers()
     {
         // Arrange
         var repository = CreateUserRepository();
 
         // Act
-        var result = repository.Get().ToList();
+        var result = await repository.GetAllAsync();
 
         // Assert
         Assert.Empty(result);
     }
 
     [Fact]
-    public async Task Get_WithSearch_ReturnsMatchingUsers()
+    public async Task GetAllAsync_WithSearch_ReturnsMatchingUsers()
     {
         // Arrange
         await CreateAndSaveUserEntity("johndoe", "john@test.com");
@@ -75,7 +75,7 @@ public class UserRepositoryTests : DbContextTestsBase
         var repository = CreateUserRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(u => u.Username.Contains("john"))
             .ToList();
 
@@ -85,7 +85,7 @@ public class UserRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_SearchByEmail_ReturnsMatchingUser()
+    public async Task GetAllAsync_SearchByEmail_ReturnsMatchingUser()
     {
         // Arrange
         await CreateAndSaveUserEntity("user1", "user1@gmail.com");
@@ -93,7 +93,7 @@ public class UserRepositoryTests : DbContextTestsBase
         var repository = CreateUserRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(u => u.Email.Contains("gmail"))
             .ToList();
 
@@ -103,7 +103,7 @@ public class UserRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_OrderedByUsername_ReturnsSortedUsers()
+    public async Task GetAllAsync_OrderedByUsername_ReturnsSortedUsers()
     {
         // Arrange
         await CreateAndSaveUserEntity("zebra");
@@ -112,7 +112,7 @@ public class UserRepositoryTests : DbContextTestsBase
         var repository = CreateUserRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(u => u.Username)
             .ToList();
 
@@ -124,7 +124,7 @@ public class UserRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_OrderedByEmailDescending_ReturnsSortedUsers()
+    public async Task GetAllAsync_OrderedByEmailDescending_ReturnsSortedUsers()
     {
         // Arrange
         await CreateAndSaveUserEntity("user1", "aaa@test.com");
@@ -133,7 +133,7 @@ public class UserRepositoryTests : DbContextTestsBase
         var repository = CreateUserRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderByDescending(u => u.Email)
             .ToList();
 
@@ -145,7 +145,7 @@ public class UserRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_WithPaging_ReturnsPagedUsers()
+    public async Task GetAllAsync_WithPaging_ReturnsPagedUsers()
     {
         // Arrange
         for (int i = 1; i <= 10; i++)
@@ -158,7 +158,7 @@ public class UserRepositoryTests : DbContextTestsBase
         int pageNumber = 2;
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(u => u.Username)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -169,7 +169,36 @@ public class UserRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Insert_AddsUserToRepository()
+    public async Task GetByIdAsync_ReturnsCorrectUser()
+    {
+        // Arrange
+        var user = await CreateAndSaveUserEntity("specificuser", "specific@test.com");
+        var repository = CreateUserRepository();
+
+        // Act
+        var result = await repository.GetByIdAsync(user.Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(user.Id, result.Id);
+        Assert.Equal("specificuser", result.Username);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_WithInvalidId_ReturnsNull()
+    {
+        // Arrange
+        var repository = CreateUserRepository();
+
+        // Act
+        var result = await repository.GetByIdAsync(Guid.NewGuid());
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task InsertAsync_AddsUserToRepository()
     {
         // Arrange
         var repository = CreateUserRepository();
@@ -188,14 +217,13 @@ public class UserRepositoryTests : DbContextTestsBase
         };
 
         // Act
-        var result = repository.Insert(newUser);
+        var result = await repository.InsertAsync(newUser);
         await GameDbContextSut.SaveChangesAsync();
 
         // Assert
         Assert.NotNull(result);
         Assert.NotEqual(Guid.Empty, result.Id);
 
-        // Verify in database
         var userFromDb = GameDbContextSut.Users.FirstOrDefault(u => u.Id == result.Id);
         Assert.NotNull(userFromDb);
         Assert.Equal("newuser", userFromDb.Username);
@@ -267,7 +295,6 @@ public class UserRepositoryTests : DbContextTestsBase
         Assert.Equal("updated@test.com", result.Email);
         Assert.Equal("Updated", result.Name);
 
-        // Verify in database
         var userFromDb = GameDbContextSut.Users.FirstOrDefault(u => u.Id == originalUser.Id);
         Assert.NotNull(userFromDb);
         Assert.Equal("updated@test.com", userFromDb.Email);
@@ -317,14 +344,13 @@ public class UserRepositoryTests : DbContextTestsBase
     {
         // Arrange
         var repository = CreateUserRepository();
-        var nonExistentId = Guid.NewGuid();
 
         // Act & Assert
-        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.DeleteAsync(nonExistentId));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.DeleteAsync(Guid.NewGuid()));
     }
 
     [Fact]
-    public async Task Get_CaseSensitiveSearch_FindsExactMatches()
+    public async Task GetAllAsync_CaseSensitiveSearch_FindsExactMatches()
     {
         // Arrange
         await CreateAndSaveUserEntity("JohnDoe");
@@ -332,7 +358,7 @@ public class UserRepositoryTests : DbContextTestsBase
         var repository = CreateUserRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(u => u.Username == "JohnDoe")
             .ToList();
 
@@ -342,7 +368,7 @@ public class UserRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_MultipleFilters_ReturnsFilteredUsers()
+    public async Task GetAllAsync_MultipleFilters_ReturnsFilteredUsers()
     {
         // Arrange
         await CreateAndSaveUserEntity("user1", "user1@gmail.com", "John");
@@ -351,7 +377,7 @@ public class UserRepositoryTests : DbContextTestsBase
         var repository = CreateUserRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(u => u.Name == "John" && u.Email.Contains("gmail"))
             .ToList();
 

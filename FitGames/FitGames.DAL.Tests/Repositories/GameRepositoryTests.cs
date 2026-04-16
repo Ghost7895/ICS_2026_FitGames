@@ -2,7 +2,6 @@ using FitGames.DAL.Entities;
 using FitGames.DAL.Enums;
 using FitGames.DAL.Mappers;
 using FitGames.DAL.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace FitGames.DAL.Tests.Repositories;
 
@@ -37,7 +36,7 @@ public class GameRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_ReturnsAllGames()
+    public async Task GetAllAsync_ReturnsAllGames()
     {
         // Arrange
         var game1 = await CreateAndSaveGameEntity("Game 1");
@@ -45,7 +44,7 @@ public class GameRepositoryTests : DbContextTestsBase
         var repository = CreateGameRepository();
 
         // Act
-        var result = repository.Get().ToList();
+        var result = (await repository.GetAllAsync()).ToList();
 
         // Assert
         Assert.NotEmpty(result);
@@ -54,20 +53,20 @@ public class GameRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_ReturnsEmptyWhenNoGames()
+    public async Task GetAllAsync_ReturnsEmptyWhenNoGames()
     {
         // Arrange
         var repository = CreateGameRepository();
 
         // Act
-        var result = repository.Get().ToList();
+        var result = await repository.GetAllAsync();
 
         // Assert
         Assert.Empty(result);
     }
 
     [Fact]
-    public async Task Get_WithFilter_ReturnsFilteredGames()
+    public async Task GetAllAsync_WithFilter_ReturnsFilteredGames()
     {
         // Arrange
         await CreateAndSaveGameEntity("Minecraft", genre: Genre.Sandbox);
@@ -76,7 +75,7 @@ public class GameRepositoryTests : DbContextTestsBase
         var repository = CreateGameRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(g => g.Genre == Genre.Sandbox)
             .ToList();
 
@@ -86,7 +85,7 @@ public class GameRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_WithSearch_ReturnsMatchingGames()
+    public async Task GetAllAsync_WithSearch_ReturnsMatchingGames()
     {
         // Arrange
         await CreateAndSaveGameEntity("Minecraft");
@@ -95,7 +94,7 @@ public class GameRepositoryTests : DbContextTestsBase
         var repository = CreateGameRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(g => g.Name.Contains("Min"))
             .ToList();
 
@@ -105,7 +104,7 @@ public class GameRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_OrderedByName_ReturnsSortedGames()
+    public async Task GetAllAsync_OrderedByName_ReturnsSortedGames()
     {
         // Arrange
         await CreateAndSaveGameEntity("Zebra Game");
@@ -114,7 +113,7 @@ public class GameRepositoryTests : DbContextTestsBase
         var repository = CreateGameRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(g => g.Name)
             .ToList();
 
@@ -126,7 +125,7 @@ public class GameRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_OrderedByGenreDescending_ReturnsSortedGames()
+    public async Task GetAllAsync_OrderedByGenreDescending_ReturnsSortedGames()
     {
         // Arrange
         await CreateAndSaveGameEntity("Game1", genre: Genre.Action);
@@ -135,13 +134,12 @@ public class GameRepositoryTests : DbContextTestsBase
         var repository = CreateGameRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderByDescending(g => g.Genre)
             .ToList();
 
         // Assert
         Assert.Equal(3, result.Count);
-        // Verify descending order by genre enum values
         for (int i = 0; i < result.Count - 1; i++)
         {
             Assert.True(result[i].Genre >= result[i + 1].Genre);
@@ -149,7 +147,7 @@ public class GameRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_WithPaging_ReturnsPagedGames()
+    public async Task GetAllAsync_WithPaging_ReturnsPagedGames()
     {
         // Arrange
         for (int i = 1; i <= 10; i++)
@@ -162,7 +160,7 @@ public class GameRepositoryTests : DbContextTestsBase
         int pageNumber = 2;
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(g => g.Name)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -170,12 +168,40 @@ public class GameRepositoryTests : DbContextTestsBase
 
         // Assert
         Assert.Equal(3, result.Count);
-        // Verify we got page 2 (items 4-6)
         Assert.StartsWith("Game 04", result.First().Name);
     }
 
     [Fact]
-    public async Task Insert_AddsGameToRepository()
+    public async Task GetByIdAsync_ReturnsCorrectGame()
+    {
+        // Arrange
+        var game = await CreateAndSaveGameEntity("Specific Game");
+        var repository = CreateGameRepository();
+
+        // Act
+        var result = await repository.GetByIdAsync(game.Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(game.Id, result.Id);
+        Assert.Equal("Specific Game", result.Name);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_WithInvalidId_ReturnsNull()
+    {
+        // Arrange
+        var repository = CreateGameRepository();
+
+        // Act
+        var result = await repository.GetByIdAsync(Guid.NewGuid());
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task InsertAsync_AddsGameToRepository()
     {
         // Arrange
         var repository = CreateGameRepository();
@@ -193,14 +219,13 @@ public class GameRepositoryTests : DbContextTestsBase
         };
 
         // Act
-        var result = repository.Insert(newGame);
+        var result = await repository.InsertAsync(newGame);
         await GameDbContextSut.SaveChangesAsync();
 
         // Assert
         Assert.NotNull(result);
         Assert.NotEqual(Guid.Empty, result.Id);
 
-        // Verify in database
         var gameFromDb = GameDbContextSut.Games.FirstOrDefault(g => g.Id == result.Id);
         Assert.NotNull(gameFromDb);
         Assert.Equal("New Game", gameFromDb.Name);
@@ -280,6 +305,7 @@ public class GameRepositoryTests : DbContextTestsBase
             Description = "Updated Desc",
             Genre = Genre.Strategy,
             Pegi = Pegi.Pegi18,
+            DeveloperId = originalGame.DeveloperId,
             Developer = originalGame.Developer
         };
 
@@ -292,7 +318,6 @@ public class GameRepositoryTests : DbContextTestsBase
         Assert.Equal("Updated Desc", result.Description);
         Assert.Equal(Genre.Strategy, result.Genre);
 
-        // Verify in database
         var gameFromDb = GameDbContextSut.Games.FirstOrDefault(g => g.Id == originalGame.Id);
         Assert.NotNull(gameFromDb);
         Assert.Equal("Updated Name", gameFromDb.Name);
@@ -339,14 +364,13 @@ public class GameRepositoryTests : DbContextTestsBase
     {
         // Arrange
         var repository = CreateGameRepository();
-        var nonExistentId = Guid.NewGuid();
 
         // Act & Assert
-        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.DeleteAsync(nonExistentId));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.DeleteAsync(Guid.NewGuid()));
     }
 
     [Fact]
-    public async Task Get_WithMultipleFilters_ReturnsFilteredGames()
+    public async Task GetAllAsync_WithMultipleFilters_ReturnsFilteredGames()
     {
         // Arrange
         await CreateAndSaveGameEntity("Game 1", genre: Genre.Action, pegi: Pegi.Pegi12);
@@ -355,7 +379,7 @@ public class GameRepositoryTests : DbContextTestsBase
         var repository = CreateGameRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(g => g.Genre == Genre.Action && g.Pegi == Pegi.Pegi12)
             .ToList();
 
@@ -365,7 +389,7 @@ public class GameRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_OrderByNameThenByGenre_ReturnsSortedGames()
+    public async Task GetAllAsync_OrderByNameThenByGenre_ReturnsSortedGames()
     {
         // Arrange
         await CreateAndSaveGameEntity("B Game", genre: Genre.Strategy);
@@ -374,7 +398,7 @@ public class GameRepositoryTests : DbContextTestsBase
         var repository = CreateGameRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(g => g.Name)
             .ThenBy(g => g.Genre)
             .ToList();

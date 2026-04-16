@@ -21,7 +21,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_ReturnsAllDevelopers()
+    public async Task GetAllAsync_ReturnsAllDevelopers()
     {
         // Arrange
         var dev1 = await CreateAndSaveDeveloperEntity("Developer 1");
@@ -29,7 +29,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
         var repository = CreateDeveloperRepository();
 
         // Act
-        var result = repository.Get().ToList();
+        var result = (await repository.GetAllAsync()).ToList();
 
         // Assert
         Assert.NotEmpty(result);
@@ -38,7 +38,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_WithSearch_ReturnsMatchingDevelopers()
+    public async Task GetAllAsync_WithSearch_ReturnsMatchingDevelopers()
     {
         // Arrange
         await CreateAndSaveDeveloperEntity("FromSoftware");
@@ -47,7 +47,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
         var repository = CreateDeveloperRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(d => d.Name.Contains("FromSoftware"))
             .ToList();
 
@@ -57,7 +57,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_OrderedByName_ReturnsSortedDevelopers()
+    public async Task GetAllAsync_OrderedByName_ReturnsSortedDevelopers()
     {
         // Arrange
         await CreateAndSaveDeveloperEntity("Rockstar Games");
@@ -66,7 +66,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
         var repository = CreateDeveloperRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(d => d.Name)
             .ToList();
 
@@ -78,7 +78,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_WithPaging_ReturnsPagedDevelopers()
+    public async Task GetAllAsync_WithPaging_ReturnsPagedDevelopers()
     {
         // Arrange
         for (int i = 1; i <= 10; i++)
@@ -91,7 +91,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
         int pageNumber = 2;
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(d => d.Name)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -102,21 +102,49 @@ public class DeveloperRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Insert_AddsDeveloperToRepository()
+    public async Task GetByIdAsync_ReturnsCorrectDeveloper()
+    {
+        // Arrange
+        var developer = await CreateAndSaveDeveloperEntity("Specific Studio");
+        var repository = CreateDeveloperRepository();
+
+        // Act
+        var result = await repository.GetByIdAsync(developer.Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(developer.Id, result.Id);
+        Assert.Equal("Specific Studio", result.Name);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_WithInvalidId_ReturnsNull()
+    {
+        // Arrange
+        var repository = CreateDeveloperRepository();
+
+        // Act
+        var result = await repository.GetByIdAsync(Guid.NewGuid());
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task InsertAsync_AddsDeveloperToRepository()
     {
         // Arrange
         var repository = CreateDeveloperRepository();
         var newDeveloper = new DeveloperEntity { Name = "New Studio" };
 
         // Act
-        var result = repository.Insert(newDeveloper);
+        var result = await repository.InsertAsync(newDeveloper);
         await GameDbContextSut.SaveChangesAsync();
 
         // Assert
         Assert.NotNull(result);
         Assert.NotEqual(Guid.Empty, result.Id);
 
-        // Verify in database
         var devFromDb = GameDbContextSut.Developers.FirstOrDefault(d => d.Id == result.Id);
         Assert.NotNull(devFromDb);
         Assert.Equal("New Studio", devFromDb.Name);
@@ -174,7 +202,6 @@ public class DeveloperRepositoryTests : DbContextTestsBase
         // Assert
         Assert.Equal("Updated Studio Name", result.Name);
 
-        // Verify in database
         var devFromDb = GameDbContextSut.Developers.FirstOrDefault(d => d.Id == originalDev.Id);
         Assert.NotNull(devFromDb);
         Assert.Equal("Updated Studio Name", devFromDb.Name);
@@ -216,14 +243,13 @@ public class DeveloperRepositoryTests : DbContextTestsBase
     {
         // Arrange
         var repository = CreateDeveloperRepository();
-        var nonExistentId = Guid.NewGuid();
 
         // Act & Assert
-        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.DeleteAsync(nonExistentId));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.DeleteAsync(Guid.NewGuid()));
     }
 
     [Fact]
-    public async Task Get_CaseSensitiveSearch_FindsExactMatches()
+    public async Task GetAllAsync_CaseSensitiveSearch_FindsExactMatches()
     {
         // Arrange
         await CreateAndSaveDeveloperEntity("FromSoftware");
@@ -231,7 +257,7 @@ public class DeveloperRepositoryTests : DbContextTestsBase
         var repository = CreateDeveloperRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(d => d.Name == "FromSoftware")
             .ToList();
 
@@ -258,7 +284,7 @@ public class LibraryRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_ReturnsAllLibraries()
+    public async Task GetAllAsync_ReturnsAllLibraries()
     {
         // Arrange
         var lib1 = await CreateAndSaveLibraryEntity("Library 1");
@@ -266,7 +292,7 @@ public class LibraryRepositoryTests : DbContextTestsBase
         var repository = CreateLibraryRepository();
 
         // Act
-        var result = repository.Get().ToList();
+        var result = (await repository.GetAllAsync()).ToList();
 
         // Assert
         Assert.NotEmpty(result);
@@ -275,7 +301,7 @@ public class LibraryRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_WithSearch_ReturnsMatchingLibraries()
+    public async Task GetAllAsync_WithSearch_ReturnsMatchingLibraries()
     {
         // Arrange
         await CreateAndSaveLibraryEntity("My Collection");
@@ -284,7 +310,7 @@ public class LibraryRepositoryTests : DbContextTestsBase
         var repository = CreateLibraryRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .Where(l => l.Name.Contains("Collection"))
             .ToList();
 
@@ -294,7 +320,7 @@ public class LibraryRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Get_OrderedByName_ReturnsSortedLibraries()
+    public async Task GetAllAsync_OrderedByName_ReturnsSortedLibraries()
     {
         // Arrange
         await CreateAndSaveLibraryEntity("Zebra Collection");
@@ -303,7 +329,7 @@ public class LibraryRepositoryTests : DbContextTestsBase
         var repository = CreateLibraryRepository();
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(l => l.Name)
             .ToList();
 
@@ -315,21 +341,49 @@ public class LibraryRepositoryTests : DbContextTestsBase
     }
 
     [Fact]
-    public async Task Insert_AddsLibraryToRepository()
+    public async Task GetByIdAsync_ReturnsCorrectLibrary()
+    {
+        // Arrange
+        var library = await CreateAndSaveLibraryEntity("Specific Library");
+        var repository = CreateLibraryRepository();
+
+        // Act
+        var result = await repository.GetByIdAsync(library.Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(library.Id, result.Id);
+        Assert.Equal("Specific Library", result.Name);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_WithInvalidId_ReturnsNull()
+    {
+        // Arrange
+        var repository = CreateLibraryRepository();
+
+        // Act
+        var result = await repository.GetByIdAsync(Guid.NewGuid());
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task InsertAsync_AddsLibraryToRepository()
     {
         // Arrange
         var repository = CreateLibraryRepository();
         var newLibrary = new LibraryEntity { Name = "New Library" };
 
         // Act
-        var result = repository.Insert(newLibrary);
+        var result = await repository.InsertAsync(newLibrary);
         await GameDbContextSut.SaveChangesAsync();
 
         // Assert
         Assert.NotNull(result);
         Assert.NotEqual(Guid.Empty, result.Id);
 
-        // Verify in database
         var libFromDb = GameDbContextSut.Libraries.FirstOrDefault(l => l.Id == result.Id);
         Assert.NotNull(libFromDb);
         Assert.Equal("New Library", libFromDb.Name);
@@ -369,7 +423,6 @@ public class LibraryRepositoryTests : DbContextTestsBase
         // Assert
         Assert.Equal("Updated Name", result.Name);
 
-        // Verify in database
         var libFromDb = GameDbContextSut.Libraries.FirstOrDefault(l => l.Id == originalLib.Id);
         Assert.NotNull(libFromDb);
         Assert.Equal("Updated Name", libFromDb.Name);
@@ -396,14 +449,13 @@ public class LibraryRepositoryTests : DbContextTestsBase
     {
         // Arrange
         var repository = CreateLibraryRepository();
-        var nonExistentId = Guid.NewGuid();
 
         // Act & Assert
-        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.DeleteAsync(nonExistentId));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => repository.DeleteAsync(Guid.NewGuid()));
     }
 
     [Fact]
-    public async Task Get_WithPaging_ReturnsPagedLibraries()
+    public async Task GetAllAsync_WithPaging_ReturnsPagedLibraries()
     {
         // Arrange
         for (int i = 1; i <= 10; i++)
@@ -416,7 +468,7 @@ public class LibraryRepositoryTests : DbContextTestsBase
         int pageNumber = 2;
 
         // Act
-        var result = repository.Get()
+        var result = (await repository.GetAllAsync())
             .OrderBy(l => l.Name)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
