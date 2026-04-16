@@ -4,6 +4,7 @@ public record LibraryEntity : IEntity
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }
+    public Guid? UserId { get; set; }
     public ICollection<GameEntity> Games { get; init; } = new List<GameEntity>();
-
+    public ICollection<LibraryGameEntity> GameLibraries { get; init; } = new List<LibraryGameEntity>();
 }

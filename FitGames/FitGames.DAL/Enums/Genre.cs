@@ -12,5 +12,4 @@ public enum Genre
     Sandbox,
     Simulation,
     Strategy
-
 }

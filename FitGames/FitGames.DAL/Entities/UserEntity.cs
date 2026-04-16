@@ -10,5 +10,4 @@ public record UserEntity : IEntity
     public string? PhoneNumber { get; set; }
 
     public required LibraryEntity Library { get; init; }
-
 }
