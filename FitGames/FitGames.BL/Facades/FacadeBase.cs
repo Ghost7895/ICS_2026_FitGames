@@ -66,15 +66,10 @@ public abstract class
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
         IEnumerable<TEntity> entities = await uow
             .GetRepository<TEntity, TEntityMapper>()
-            .GetAllAsync()
+            .GetAllAsync(skip: numberOfRecordsToSkip, take: recordsNumberOnAPage)
             .ConfigureAwait(false);
 
-        IEnumerable<TEntity> paged = entities
-            .OrderBy(e => e.Id)
-            .Skip(numberOfRecordsToSkip)
-            .Take(recordsNumberOnAPage);
-
-        return ModelMapper.MapToListModel(paged);
+        return ModelMapper.MapToListModel(entities);
     }
 
     public virtual async Task<TDetailModel> SaveAsync(TDetailModel model)

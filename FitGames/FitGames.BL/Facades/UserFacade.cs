@@ -20,9 +20,10 @@ public class UserFacade(
     {
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
         var entities = await uow.GetRepository<UserEntity, UserEntityMapper>()
-                                .GetAllAsync(new[] { nameof(UserEntity.Library) });
+                                .GetAllAsync(
+                                    filter: u => u.Username == username,
+                                    includePaths: new[] { nameof(UserEntity.Library) });
 
-        var entity = entities.SingleOrDefault(u => u.Username == username);
-        return ModelMapper.MapToDetailModel(entity);
+        return ModelMapper.MapToDetailModel(entities.SingleOrDefault());
     }
 }

@@ -1,4 +1,5 @@
-﻿using FitGames.DAL.Entities;
+﻿using System.Linq.Expressions;
+using FitGames.DAL.Entities;
 using FitGames.DAL.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,12 @@ public class Repository<TEntity>(
 {
     private readonly DbSet<TEntity> _dbSet = dbContext.Set<TEntity>();
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(IEnumerable<string>? includePaths = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> GetAllAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        IEnumerable<string>? includePaths = null,
+        int? skip = null,
+        int? take = null,
+        CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> query = _dbSet.AsNoTracking();
         if (includePaths is not null)
@@ -22,6 +28,14 @@ public class Repository<TEntity>(
                 query = query.Include(path);
             }
         }
+        if (filter is not null)
+            query = query.Where(filter);
+        if (skip.HasValue || take.HasValue)
+            query = query.OrderBy(e => e.Id);
+        if (skip.HasValue)
+            query = query.Skip(skip.Value);
+        if (take.HasValue)
+            query = query.Take(take.Value);
         return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

@@ -21,19 +21,17 @@ public class GameFacade(
     {
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
         var entities = await uow.GetRepository<GameEntity, GameEntityMapper>()
-                                .GetAllAsync();
+                                .GetAllAsync(filter: g => g.Name.Contains(name));
 
-        return ModelMapper.MapToListModel(entities
-            .Where(g => g.Name.Contains(name))
-            .OrderBy(g => g.Name));
+        return ModelMapper.MapToListModel(entities.OrderBy(g => g.Name));
     }
 
     public async Task<IEnumerable<GameListModel>> FilterGamesByGenreAsync(Genre genre)
     {
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
         var entities = await uow.GetRepository<GameEntity, GameEntityMapper>()
-                                .GetAllAsync();
+                                .GetAllAsync(filter: g => g.Genre == genre);
 
-        return ModelMapper.MapToListModel(entities.Where(g => g.Genre == genre));
+        return ModelMapper.MapToListModel(entities);
     }
 }
