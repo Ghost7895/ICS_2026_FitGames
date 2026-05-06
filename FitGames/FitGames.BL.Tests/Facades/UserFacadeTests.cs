@@ -6,7 +6,7 @@ using FitGames.DAL.Mappers;
 using FitGames.DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitGames.DAL.Tests.Facades;
+namespace FitGames.BL.Tests.Facades;
 
 public class UserFacadeTests : DbContextTestsBase
 {
@@ -101,7 +101,7 @@ public class UserFacadeTests : DbContextTestsBase
         var library = new LibraryEntity { Name = "New User's Library" };
         GameDbContextSut.Libraries.Add(library);
         await GameDbContextSut.SaveChangesAsync();
-        
+
         var facade = CreateUserFacade();
         var userModel = new BL.Models.UserDetailModel
         {
@@ -250,5 +250,43 @@ public class UserFacadeTests : DbContextTestsBase
         // Assert
         Assert.NotNull(result);
         Assert.Equal(user.Library!.Id, result.LibraryId);
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_BeyondAvailablePages_ReturnsEmpty()
+    {
+        // Arrange
+        for (int i = 1; i <= 5; i++)
+        {
+            await CreateAndSaveUserEntity($"user{i}");
+        }
+        var facade = CreateUserFacade();
+
+        // Act
+        var result = await facade.GetPagingAsync(100, 10);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_WithPageZero_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateUserFacade();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.GetPagingAsync(0, 10));
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_WithNegativePage_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateUserFacade();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.GetPagingAsync(-1, 10));
     }
 }

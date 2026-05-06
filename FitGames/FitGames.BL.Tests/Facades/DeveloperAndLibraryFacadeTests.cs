@@ -6,7 +6,7 @@ using FitGames.DAL.Mappers;
 using FitGames.DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitGames.DAL.Tests.Facades;
+namespace FitGames.BL.Tests.Facades;
 
 public class DeveloperFacadeTests : DbContextTestsBase
 {
@@ -147,6 +147,60 @@ public class DeveloperFacadeTests : DbContextTestsBase
         var result = await facade.SaveAsync(model);
         Assert.Equal("Duplicate Name", result.Name);
     }
+
+    // Error Condition Tests
+    [Fact]
+    public async Task SaveAsync_WithEmptyName_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateDeveloperFacade();
+        var model = new BL.Models.DeveloperDetailModel
+        {
+            Id = Guid.NewGuid(),
+            Name = ""
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.SaveAsync(model));
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_BeyondAvailablePages_ReturnsEmpty()
+    {
+        // Arrange
+        for (int i = 1; i <= 5; i++)
+        {
+            await CreateAndSaveDeveloperEntity($"Developer {i}");
+        }
+        var facade = CreateDeveloperFacade();
+
+        // Act
+        var result = await facade.GetPagingAsync(100, 10);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_WithPageZero_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateDeveloperFacade();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.GetPagingAsync(0, 10));
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_WithNegativePage_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateDeveloperFacade();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.GetPagingAsync(-1, 10));
+    }
 }
 
 public class LibraryFacadeTests : DbContextTestsBase
@@ -268,5 +322,40 @@ public class LibraryFacadeTests : DbContextTestsBase
         await using var dbx = DbContextFactory.CreateDbContext();
         var deleted = await dbx.Libraries.FirstOrDefaultAsync(l => l.Id == library.Id);
         Assert.Null(deleted);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WithEmptyName_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateLibraryFacade();
+        var model = new BL.Models.LibraryDetailModel
+        {
+            Id = Guid.NewGuid(),
+            Name = ""
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.SaveAsync(model));
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_WithPageZero_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateLibraryFacade();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.GetPagingAsync(0, 10));
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_WithNegativePage_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateLibraryFacade();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.GetPagingAsync(-1, 10));
     }
 }

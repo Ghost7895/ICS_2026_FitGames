@@ -16,8 +16,11 @@ steps:
     packageType: 'sdk'
     version: '10.0.x'
 
-- script: dotnet restore FitGames/FitGames.DAL/FitGames.DAL.csproj
+- script: dotnet restore FitGames/FitGames.slnx
   displayName: Restore dependencies
 
-- script: dotnet test FitGames/FitGames.DAL.Tests/FitGames.DAL.Tests.csproj --configuration Release
+- script: dotnet test FitGames/FitGames.DAL.Tests/FitGames.DAL.Tests.csproj --configuration Release --no-restore
   displayName: Run DAL tests
+
+- script: dotnet test FitGames/FitGames.BL.Tests/FitGames.BL.Tests.csproj --configuration Release --no-restore
+  displayName: Run BL tests

@@ -83,6 +83,26 @@ public abstract class
 
     public virtual async Task<TDetailModel> SaveAsync(TDetailModel model)
     {
+        if (model == null)
+            throw new ArgumentNullException(nameof(model), "Model cannot be null");
+
+        // Validate required Name/Username field using reflection
+        var nameProperty = model.GetType().GetProperty("Name");
+        var usernameProperty = model.GetType().GetProperty("Username");
+
+        if (nameProperty != null)
+        {
+            var nameValue = nameProperty.GetValue(model) as string;
+            if (string.IsNullOrWhiteSpace(nameValue))
+                throw new InvalidOperationException("Name is required and cannot be empty or whitespace");
+        }
+        else if (usernameProperty != null)
+        {
+            var usernameValue = usernameProperty.GetValue(model) as string;
+            if (string.IsNullOrWhiteSpace(usernameValue))
+                throw new InvalidOperationException("Username is required and cannot be empty or whitespace");
+        }
+
         TDetailModel result;
 
         GuardCollectionsAreNotSet(model);
