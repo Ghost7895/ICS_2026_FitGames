@@ -7,7 +7,7 @@ using FitGames.DAL.Mappers;
 using FitGames.DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitGames.DAL.Tests.Facades;
+namespace FitGames.BL.Tests.Facades;
 
 public class GameFacadeTests : DbContextTestsBase
 {
@@ -160,7 +160,7 @@ public class GameFacadeTests : DbContextTestsBase
 
         // Assert
         Assert.Equal("Updated Name", result.Name);
-        
+
         // Verify in database
         await using var dbx = DbContextFactory.CreateDbContext();
         var dbGame = await dbx.Games.FirstOrDefaultAsync(g => g.Id == originalGame.Id);
@@ -285,5 +285,82 @@ public class GameFacadeTests : DbContextTestsBase
         // Assert
         Assert.Equal(2, actionGames.Count());
         Assert.Single(strategyGames);
+    }
+
+    // Error Condition Tests
+    [Fact]
+    public async Task SaveAsync_WithEmptyName_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateGameFacade();
+        var gameModel = new BL.Models.GameDetailModel
+        {
+            Id = Guid.NewGuid(),
+            Name = "",
+            Description = "Description",
+            Genre = Genre.Action,
+            Pegi = Pegi.Pegi12,
+            DeveloperName = "Test Dev"
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.SaveAsync(gameModel));
+    }
+
+    [Fact]
+    public async Task SaveAsync_WithNullName_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateGameFacade();
+        var gameModel = new BL.Models.GameDetailModel
+        {
+            Id = Guid.NewGuid(),
+            Name = null,
+            Description = "Description",
+            Genre = Genre.Action,
+            Pegi = Pegi.Pegi12,
+            DeveloperName = "Test Dev"
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.SaveAsync(gameModel));
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_WithPageZero_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateGameFacade();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.GetPagingAsync(0, 10));
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_WithNegativePage_ThrowsException()
+    {
+        // Arrange
+        var facade = CreateGameFacade();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => facade.GetPagingAsync(-1, 10));
+    }
+
+    [Fact]
+    public async Task GetPagingAsync_BeyondAvailablePages_ReturnsEmpty()
+    {
+        // Arrange
+        for (int i = 1; i <= 5; i++)
+        {
+            await CreateAndSaveGameEntity($"Game {i}");
+        }
+        var facade = CreateGameFacade();
+
+        // Act - Request page 100 with pageSize 10
+        var result = await facade.GetPagingAsync(100, 10);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result);
     }
 }
