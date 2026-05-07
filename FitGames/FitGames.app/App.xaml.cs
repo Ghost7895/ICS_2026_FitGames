@@ -6,9 +6,13 @@ namespace FitGames.app
     {
         private readonly IServiceProvider _serviceProvider;
 
+        // Expose the application's service provider so views can resolve services from parameterless constructors
+        public static IServiceProvider Services { get; private set; } = default!;
+
         public App(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
+            Services = serviceProvider;
             InitializeComponent();
         }
 

@@ -1,4 +1,8 @@
-﻿using FitGames.app.ViewModels.Library;
+﻿using FitGames.BL;
+using FitGames.DAL;
+using FitGames.DAL.Options;
+using FitGames.DAL.Seeds;
+using FitGames.app.ViewModels.Library;
 using FitGames.app.Views.Library;
 using FitGames.app.Services;
 using FitGames.app.Services.Interfaces;
@@ -37,6 +41,8 @@ namespace FitGames.app
             builder.Services.AddTransient<AppShell>();
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<LibraryPage>();
+
+            builder.Services.AddSingleton<IDbSeeder, DbSeeder>();
 
             return builder.Build();
         }
