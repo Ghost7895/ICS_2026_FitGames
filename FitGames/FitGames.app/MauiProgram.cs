@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FitGames.app.ViewModels.Library;
+using FitGames.app.Views.Library;
+using FitGames.app.Services;
+using FitGames.app.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace FitGames.app
 {
@@ -16,8 +21,22 @@ namespace FitGames.app
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
+
+            // Register Services
+            builder.Services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
+            builder.Services.AddSingleton<IMessengerService, MessengerService>();
+            builder.Services.AddSingleton<INavigationService, NavigationService>();
+            builder.Services.AddSingleton<IAlertService, AlertService>();
+
+            // Register ViewModels
+            builder.Services.AddTransient<LibraryViewModel>();
+
+            // Register Views 
+            builder.Services.AddTransient<AppShell>();
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<LibraryPage>();
 
             return builder.Build();
         }

@@ -17,6 +17,18 @@ namespace FitGames.app.WinUI
         public App()
         {
             this.InitializeComponent();
+
+            // Temporary: log ALL resource failures to Output window
+            this.DebugSettings.XamlResourceReferenceFailed += (s, e) =>
+            {
+                System.Diagnostics.Debug.WriteLine("❌ RESOURCE FAILED: " + e.Message);
+            };
+
+            this.UnhandledException += (s, e) =>
+            {
+                System.Diagnostics.Debug.WriteLine("❌ UNHANDLED: " + e.Message);
+                e.Handled = true; // Prevent crash so you can read the message
+            };
         }
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();

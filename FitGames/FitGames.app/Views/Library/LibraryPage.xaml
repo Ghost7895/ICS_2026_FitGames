@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:FitGames.app.Views"
+             x:Class="FitGames.app.Views.Library.LibraryPage"
+             Title="Library">
+    <Grid RowDefinitions="Auto, Auto, *" Padding="20" RowSpacing="20">
+
+        <!-- Header -->
+        <Label Grid.Row="0"
+               Text="Your Library"
+               FontSize="32"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <!-- Toolbar / Search Row -->
+        <Grid Grid.Row="1" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="15">
+            <!-- Search Bar -->
+            <Border Grid.Column="0"
+                    Stroke="{AppThemeBinding Light=Black, Dark=White}"
+                    StrokeThickness="2"
+                    BackgroundColor="Transparent"
+                    Padding="10,0">
+                <Entry Placeholder="Name..." 
+                       ClearButtonVisibility="WhileEditing"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <!-- Filter Icon -->
+            <ImageButton Grid.Column="1"
+                         Source="dotnet_bot.png" 
+                         WidthRequest="30"
+                         HeightRequest="30"
+                         VerticalOptions="Center" />
+
+            <!-- Bookmark Icon -->
+            <ImageButton Grid.Column="2"
+                         Source="dotnet_bot.png" 
+                         WidthRequest="30"
+                         HeightRequest="30"
+                         VerticalOptions="Center"
+                         HorizontalOptions="End" />
+        </Grid>
+
+        <!-- Grid of Items -->
+        <ScrollView Grid.Row="2">
+            <CollectionView>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" VerticalItemSpacing="20" HorizontalItemSpacing="20" />
+                </CollectionView.ItemsLayout>
+
+                <!-- Mock Data placeholder. Later bind this to an ObservableCollection in your ViewModel -->
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>1</x:String>
+                        <x:String>2</x:String>
+                        <x:String>3</x:String>
+                        <x:String>4</x:String>
+                        <x:String>5</x:String>
+                        <x:String>6</x:String>
+                    </x:Array>
+                </CollectionView.ItemsSource>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <!-- Grid Item Wireframe -->
+                        <Border Padding="0"
+                                Stroke="Transparent"
+                                BackgroundColor="#E0E0E0"
+                                HeightRequest="150">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
+                            <Grid>
+                                <!-- Background Image Placeholder -->
+                                <Image Grid.Row="0"
+                                       HorizontalOptions="Fill" VerticalOptions="Fill"
+                                       Aspect="AspectFill"
+                                       Source="dotnet_bot.png"
+                                       Opacity="0.5" />
+
+                                <!-- Title Placeholder Overlay -->
+                                <BoxView Grid.Row="0"
+                                         Opacity="0.25"
+                                         Color="Black" />
+
+                                <Label Grid.Row="0"
+                                       Margin="12"
+                                       FontSize="16" LineBreakMode="WordWrap"
+                                       Text="Item Title"
+                                       TextColor="White" VerticalOptions="End" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+
+    </Grid>
+</views:ContentPageBase>
