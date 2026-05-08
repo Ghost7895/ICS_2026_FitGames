@@ -8,4 +8,5 @@ public interface IGameFacade : IFacade<GameEntity, GameListModel, GameDetailMode
 {
     Task<IEnumerable<GameListModel>> FilterGamesByNameAsync(string name);
     Task<IEnumerable<GameListModel>> FilterGamesByGenreAsync(Genre genre);
+    Task<IEnumerable<GameListModel>> FilterGamesAsync(string? name, Genre? genre);
 }

@@ -34,4 +34,18 @@ public class GameFacade(
 
         return ModelMapper.MapToListModel(entities);
     }
+
+    public async Task<IEnumerable<GameListModel>> FilterGamesAsync(string? name, Genre? genre)
+    {
+        await using IUnitOfWork uow = UnitOfWorkFactory.Create();
+
+        var searchName = name?.ToLower();
+
+        var entities = await uow.GetRepository<GameEntity, GameEntityMapper>()
+            .GetAllAsync(filter: g => 
+                (string.IsNullOrWhiteSpace(searchName) || g.Name.ToLower().Contains(searchName)) &&
+                (!genre.HasValue || genre.Value == Genre.Unknown || g.Genre == genre.Value));
+
+        return ModelMapper.MapToListModel(entities.OrderBy(g => g.Name));
+    }
 }

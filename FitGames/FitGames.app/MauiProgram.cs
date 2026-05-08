@@ -6,6 +6,8 @@ using FitGames.app.ViewModels.Library;
 using FitGames.app.ViewModels.Game;
 using FitGames.app.Views.Library;
 using FitGames.app.Views.Game;
+using FitGames.app.ViewModels.Home;
+using FitGames.app.Views.Home;
 using FitGames.app.Services;
 using FitGames.app.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -49,11 +51,13 @@ namespace FitGames.app
             builder.Services.AddBLServices();
 
             // Register ViewModels
+            builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<LibraryViewModel>();
             builder.Services.AddTransient<GameDetailViewModel>();
 
             // Register Views
             builder.Services.AddTransient<AppShell>();
+            builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<LibraryPage>();
             builder.Services.AddTransient<GameDetailPage>();
