@@ -37,6 +37,10 @@ public partial class CreateUserViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private async Task CancelAsync()
+        => await _navigationService.GoToAsync("..");
+
+    [RelayCommand]
     private async Task CreateUserAsync()
     {
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Email))

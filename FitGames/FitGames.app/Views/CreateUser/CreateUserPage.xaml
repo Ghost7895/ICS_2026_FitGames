@@ -48,6 +48,9 @@
                         Margin="0,16,0,0"
                         Command="{Binding CreateUserCommand}" />
 
+                <Button Text="Cancel"
+                        Command="{Binding CancelCommand}" />
+
             </VerticalStackLayout>
         </ScrollView>
     </Grid>
