@@ -12,6 +12,7 @@ namespace FitGames.app.ViewModels.Library;
 
 public partial class LibraryViewModel(
     ILibraryFacade libraryFacade,
+    IGameFacade gameFacade,
     INavigationService navigationService,
     IMessengerService messengerService)
     : ViewModelBase(messengerService),
@@ -19,12 +20,17 @@ public partial class LibraryViewModel(
       IRecipient<LibraryGameRemoveMessage>
 {
     [ObservableProperty]
-    public partial IEnumerable<GameListModel> Games { get; set; }
+    public partial IEnumerable<GameListModel> Games { get; set; } = [];
+
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+
+    partial void OnSearchTextChanged(string value)
+        => _ = LoadDataAsync();
 
     protected override async Task LoadDataAsync()
     {
         await base.LoadDataAsync();
-
         Games = await LoadGamesAsync();
     }
 
@@ -32,12 +38,19 @@ public partial class LibraryViewModel(
     {
         IEnumerable<LibraryListModel> libraries = await libraryFacade.GetPagingAsync(1, 50);
         LibraryListModel? first = libraries.FirstOrDefault();
-
-        if (first is null)
-            return [];
+        if (first is null) return [];
 
         LibraryDetailModel? detail = await libraryFacade.GetAsync(first.Id);
-        return detail?.Games ?? [];
+        if (detail is null) return [];
+
+        if (!string.IsNullOrWhiteSpace(SearchText))
+        {
+            IEnumerable<GameListModel> filtered = await gameFacade.FilterGamesByNameAsync(SearchText);
+            HashSet<Guid> libraryGameIds = detail.Games.Select(g => g.Id).ToHashSet();
+            return filtered.Where(g => libraryGameIds.Contains(g.Id));
+        }
+
+        return detail.Games;
     }
 
     [RelayCommand]

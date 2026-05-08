@@ -8,7 +8,7 @@
     xmlns:gameViews="clr-namespace:FitGames.app.Views.Game"
     x:Name="AppShellRoot"
     FlyoutBehavior="Locked"
-    Title="FitGames.app">
+    Title="FitGames">
 
     <Shell.FlyoutHeader>
         <HorizontalStackLayout Padding="20" Spacing="15">
