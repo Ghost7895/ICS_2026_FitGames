@@ -63,10 +63,14 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
         foreach (var seed in new[]
         {
             LibraryGameSeeds.AliceCS2, LibraryGameSeeds.AliceWitcher3,
-            LibraryGameSeeds.AliceMinecraft, LibraryGameSeeds.BobGTA5,
-            LibraryGameSeeds.BobLastOfUs, LibraryGameSeeds.BobPortal2,
+            LibraryGameSeeds.AliceMinecraft, LibraryGameSeeds.AliceGTA5,
+            LibraryGameSeeds.AlicePortal2,
+            LibraryGameSeeds.BobGTA5, LibraryGameSeeds.BobLastOfUs,
+            LibraryGameSeeds.BobPortal2, LibraryGameSeeds.BobCS2,
+            LibraryGameSeeds.BobMinecraft, LibraryGameSeeds.BobWitcher3,
             LibraryGameSeeds.SharedWitcher3, LibraryGameSeeds.SharedMinecraft,
-            LibraryGameSeeds.SharedPortal2,
+            LibraryGameSeeds.SharedPortal2, LibraryGameSeeds.SharedCS2,
+            LibraryGameSeeds.SharedGTA5, LibraryGameSeeds.SharedLastOfUs,
         })
         {
             if (!dbContext.Set<LibraryGameEntity>().Any(lg =>
