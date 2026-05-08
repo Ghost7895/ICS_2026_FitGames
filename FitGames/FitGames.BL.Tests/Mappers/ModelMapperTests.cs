@@ -3,7 +3,7 @@ using FitGames.BL.Models;
 using FitGames.DAL.Entities;
 using FitGames.DAL.Enums;
 
-namespace FitGames.DAL.Tests.Mappers;
+namespace FitGames.BL.Tests.Mappers;
 
 public class GameModelMapperTests
 {
