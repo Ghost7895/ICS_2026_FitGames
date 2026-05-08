@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using FitGames.app.Services.Interfaces;
+using FitGames.app.Views.CreateUser;
 
 namespace FitGames.app
 {
@@ -14,6 +15,8 @@ namespace FitGames.app
         {
             _navigationService = navigationService;
             InitializeComponent();
+
+            Routing.RegisterRoute("createuser", typeof(CreateUserPage));
 
             GoToSignInCommand = new Command(async () => await GoToAsync("//signin"));
             GoToHomeCommand = new Command(async () => await GoToAsync("//home"));

@@ -40,7 +40,7 @@ public partial class SignInViewModel : ViewModelBase
     [RelayCommand]
     private async Task AddUserAsync()
     {
-        // TODO: navigate to user creation page
-        await Task.CompletedTask;
+        ForceDataRefreshOnNextAppearing();
+        await _navigationService.GoToAsync("createuser");
     }
 }
