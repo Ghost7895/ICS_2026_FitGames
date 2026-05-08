@@ -13,7 +13,7 @@ public static class GameSeeds
         Description = "The world's most popular tactical first-person shooter, rebuilt on the Source 2 engine.",
         Pegi = Pegi.Pegi18,
         Genre = Genre.Action,
-        ImageUrl = "https://example.com/images/cs2.jpg",
+        ImageUrl = "https://cdn.alza.cz/Foto/ImgGalery/Image/counter-strike-2-key-art_4.jpg",
         DeveloperId = DeveloperSeeds.Valve.Id,
         Developer = DeveloperSeeds.Valve
     };
@@ -25,7 +25,7 @@ public static class GameSeeds
         Description = "An open-world RPG following Geralt of Rivia on a quest to find his adopted daughter.",
         Pegi = Pegi.Pegi18,
         Genre = Genre.RolePlaying,
-        ImageUrl = "https://example.com/images/witcher3.jpg",
+        ImageUrl = "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
         DeveloperId = DeveloperSeeds.CDProjekt.Id,
         Developer = DeveloperSeeds.CDProjekt
     };
@@ -37,7 +37,7 @@ public static class GameSeeds
         Description = "An open-world crime game set in the fictional state of San Andreas.",
         Pegi = Pegi.Pegi18,
         Genre = Genre.Action,
-        ImageUrl = "https://example.com/images/gta5.jpg",
+        ImageUrl = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3240220/4c8d7ce5142a528bdac68c093bd1bcc720e2baee/capsule_616x353.jpg?t=1765479644",
         DeveloperId = DeveloperSeeds.Rockstar.Id,
         Developer = DeveloperSeeds.Rockstar
     };
@@ -49,7 +49,7 @@ public static class GameSeeds
         Description = "A survival action-adventure game set in a post-apocalyptic world overrun by infected humans.",
         Pegi = Pegi.Pegi18,
         Genre = Genre.Adventure,
-        ImageUrl = "https://example.com/images/tlou.jpg",
+        ImageUrl = "https://cdn.alza.cz/Foto/ImgGalery/Image/the-last-of-us-part-1-key-art-ellie-nahled.jpg",
         DeveloperId = DeveloperSeeds.Naughty.Id,
         Developer = DeveloperSeeds.Naughty
     };
@@ -61,7 +61,7 @@ public static class GameSeeds
         Description = "A sandbox game where players explore, build, and survive in a procedurally generated world.",
         Pegi = Pegi.Pegi7,
         Genre = Genre.Sandbox,
-        ImageUrl = "https://example.com/images/minecraft.jpg",
+        ImageUrl = "https://cdn.alza.cz/Foto/ImgGalery/Image/minecraft-key-art.jpg",
         DeveloperId = DeveloperSeeds.Mojang.Id,
         Developer = DeveloperSeeds.Mojang
     };
@@ -73,7 +73,7 @@ public static class GameSeeds
         Description = "A puzzle-platform game where players use a portal gun to solve increasingly complex challenges.",
         Pegi = Pegi.Pegi12,
         Genre = Genre.Puzzle,
-        ImageUrl = "https://example.com/images/portal2.jpg",
+        ImageUrl = "https://assets.nintendo.com/image/upload/q_auto/f_auto/store/software/switch/70010000050313/75484f73fedd25cb830c5d93fbb3fca643a5ec0b09df2815291ead880bc7d6b1",
         DeveloperId = DeveloperSeeds.Valve.Id,
         Developer = DeveloperSeeds.Valve
     };

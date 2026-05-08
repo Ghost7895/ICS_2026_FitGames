@@ -1,15 +1,22 @@
 ﻿using FitGames.app.Models;
 using FitGames.app.Services.Interfaces;
+using FitGames.app.Views.Game;
 using FitGames.app.Views.Library;
+using FitGames.app.ViewModels.Game;
 using FitGames.app.ViewModels.Library;
 
 namespace FitGames.app.Services;
 
 public class NavigationService : INavigationService
 {
+    public const string LibraryRouteAbsolute = "//library";
+    public const string GameDetailRouteRelative = "gamedetail";
+    public const string LibraryEditRouteRelative = "edit";
+
     public IEnumerable<RouteModel> Routes { get; } = new List<RouteModel>
     {
-        new("//library", typeof(LibraryPage), typeof(LibraryViewModel))
+        new(LibraryRouteAbsolute, typeof(LibraryPage), typeof(LibraryViewModel)),
+        new(GameDetailRouteRelative, typeof(GameDetailPage), typeof(GameDetailViewModel)),
     };
 
     public async Task GoToAsync(string route)

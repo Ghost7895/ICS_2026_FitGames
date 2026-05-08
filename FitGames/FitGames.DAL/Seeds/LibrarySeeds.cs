@@ -9,21 +9,21 @@ public static class LibrarySeeds
     {
         Id = Guid.Parse("30000000-0000-0000-0000-000000000001"),
         Name = "Alice's Collection",
-        UserId = UserSeeds.Alice.Id
+        UserId = Guid.Parse("40000000-0000-0000-0000-000000000001") // UserSeeds.Alice.Id
     };
 
     public static readonly LibraryEntity BobsLibrary = new()
     {
         Id = Guid.Parse("30000000-0000-0000-0000-000000000002"),
         Name = "Bob's Favourites",
-        UserId = UserSeeds.Bob.Id
+        UserId = Guid.Parse("40000000-0000-0000-0000-000000000002") // UserSeeds.Bob.Id
     };
 
     public static readonly LibraryEntity SharedLibrary = new()
     {
         Id = Guid.Parse("30000000-0000-0000-0000-000000000003"),
         Name = "Top Picks",
-        UserId = null  // public/shared library not tied to a user
+        UserId = null
     };
 
     public static DbContext SeedLibraries(this DbContext dbx)

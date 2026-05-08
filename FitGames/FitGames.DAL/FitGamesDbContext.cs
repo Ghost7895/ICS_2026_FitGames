@@ -19,31 +19,31 @@ public class FitGamesDbContext(DbContextOptions<FitGamesDbContext> options) : Db
     {
         base.OnModelCreating(modelBuilder);
 
+        // This handles the many-to-many relationship AND the join table configuration in one go
         modelBuilder.Entity<GameEntity>()
             .HasMany(g => g.Libraries)
             .WithMany(l => l.Games)
             .UsingEntity<LibraryGameEntity>(
-                "GameLibrary",
-                j => j.HasOne(lg => lg.Library)
-                      .WithMany(l => l.GameLibraries)
-                      .HasForeignKey(lg => lg.LibraryId)
-                      .OnDelete(DeleteBehavior.Cascade),
-                j => j.HasOne(lg => lg.Game)
-                      .WithMany(g => g.LibraryGames)
-                      .HasForeignKey(lg => lg.GameId)
-                      .OnDelete(DeleteBehavior.Cascade),
-                j => j.HasKey(lg => new { lg.LibraryId, lg.GameId })
-            );
+                l => l.HasOne(lg => lg.Library).WithMany(e => e.GameLibraries).HasForeignKey(lg => lg.LibraryId),
+                r => r.HasOne(lg => lg.Game).WithMany(e => e.LibraryGames).HasForeignKey(lg => lg.GameId),
+                j =>
+                {
+                    j.HasKey(lg => new { lg.LibraryId, lg.GameId });
+                    j.ToTable("GameLibraries");
+                });
 
+        // Developer relationship
         modelBuilder.Entity<GameEntity>()
             .HasOne(g => g.Developer)
             .WithMany(d => d.PublishedGames)
+            .HasForeignKey(g => g.DeveloperId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // User/Library relationship
         modelBuilder.Entity<UserEntity>()
             .HasOne(u => u.Library)
             .WithOne()
             .HasForeignKey<LibraryEntity>(l => l.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+        }
     }
-}

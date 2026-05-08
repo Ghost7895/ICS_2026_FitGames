@@ -1,4 +1,6 @@
-﻿namespace CookBook.DAL.Options;
+﻿using System.IO;
+
+namespace FitGames.DAL.Options;
 
 public record DALOptions
 {
