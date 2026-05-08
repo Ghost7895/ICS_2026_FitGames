@@ -12,6 +12,8 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
     {
         using FitGamesDbContext dbContext = dbContextFactory.CreateDbContext();
 
+        dbContext.Database.Migrate();
+
         if (options.Value.SeedDemoData is false)
         {
             return;
@@ -55,22 +57,6 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
 
         dbContext.SaveChanges();
 
-        // ---- Libraries ----
-        foreach (var library in new[]
-        {
-            LibrarySeeds.AlicesLibrary,
-            LibrarySeeds.BobsLibrary,
-            LibrarySeeds.SharedLibrary,
-        })
-        {
-            if (!dbContext.Set<LibraryEntity>().Any(l => l.Id == library.Id))
-            {
-                dbContext.Set<LibraryEntity>().Add(library);
-            }
-        }
-
-        dbContext.SaveChanges();
-
         // ---- Users ----
         foreach (var user in new[]
         {
@@ -82,6 +68,22 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
             {
                 dbContext.Set<UserEntity>().Add(
                     user with { Library = null! });
+            }
+        }
+
+        dbContext.SaveChanges();
+
+        // ---- Libraries ----
+        foreach (var library in new[]
+        {
+            LibrarySeeds.AlicesLibrary,
+            LibrarySeeds.BobsLibrary,
+            LibrarySeeds.SharedLibrary,
+        })
+        {
+            if (!dbContext.Set<LibraryEntity>().Any(l => l.Id == library.Id))
+            {
+                dbContext.Set<LibraryEntity>().Add(library);
             }
         }
 
@@ -101,10 +103,10 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
             LibraryGameSeeds.SharedPortal2,
         })
         {
-            if (!dbContext.Set<LibraryGameEntity>().Any(
+            if (!dbContext.Set<LibraryGameEntity>("GameLibrary").Any(
                     lg => lg.LibraryId == libraryGame.LibraryId && lg.GameId == libraryGame.GameId))
             {
-                dbContext.Set<LibraryGameEntity>().Add(
+                dbContext.Set<LibraryGameEntity>("GameLibrary").Add(
                     libraryGame with { Library = null!, Game = null! });
             }
         }

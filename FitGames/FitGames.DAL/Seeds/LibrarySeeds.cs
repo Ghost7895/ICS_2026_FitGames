@@ -9,14 +9,14 @@ public static class LibrarySeeds
     {
         Id = Guid.Parse("30000000-0000-0000-0000-000000000001"),
         Name = "Alice's Collection",
-        UserId = UserSeeds.Alice.Id
+        UserId = Guid.Parse("40000000-0000-0000-0000-000000000001")
     };
 
     public static readonly LibraryEntity BobsLibrary = new()
     {
         Id = Guid.Parse("30000000-0000-0000-0000-000000000002"),
         Name = "Bob's Favourites",
-        UserId = UserSeeds.Bob.Id
+        UserId = Guid.Parse("40000000-0000-0000-0000-000000000002")
     };
 
     public static readonly LibraryEntity SharedLibrary = new()

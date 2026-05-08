@@ -13,11 +13,16 @@
         <VerticalStackLayout Grid.Row="0" HorizontalOptions="Center" Spacing="8">
             <Label Text="Fitgames"
                    Style="{StaticResource Headline}"
-                   FontAttributes="Bold,Italic" />
-            <Image Source="appicon.svg"
-                   WidthRequest="120"
-                   HeightRequest="80"
-                   Aspect="AspectFit" />
+                   FontAttributes="Bold" />
+
+            <Image Source="logo.png"
+                   WidthRequest="160"
+                   HeightRequest="160"
+                   Aspect="AspectFill">
+                <Image.Clip>
+                    <RoundRectangleGeometry Rect="0,0,160,160" CornerRadius="24" />
+                </Image.Clip>
+            </Image>
         </VerticalStackLayout>
 
         <!-- Body -->
