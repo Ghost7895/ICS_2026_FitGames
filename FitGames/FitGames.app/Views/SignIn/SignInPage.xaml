@@ -14,7 +14,7 @@
             <Label Text="Fitgames"
                    Style="{StaticResource Headline}"
                    FontAttributes="Bold,Italic" />
-            <Image Source="dotnet_bot.png"
+            <Image Source="appicon.svg"
                    WidthRequest="120"
                    HeightRequest="80"
                    Aspect="AspectFit" />
@@ -54,7 +54,7 @@
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SignInViewModel}}, Path=SelectUserCommand}"
                                             CommandParameter="{Binding .}" />
                                     </Border.GestureRecognizers>
-                                    <Image Source="dotnet_bot.png" Aspect="AspectFit" Opacity="0.4" />
+                                    <Image Source="user.png" Aspect="AspectFit" Opacity="0.4" />
                                 </Border>
                                 <Label Text="{Binding Username}"
                                        HorizontalOptions="Center"

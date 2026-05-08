@@ -1,7 +1,10 @@
 using FitGames.BL;
 using FitGames.DAL;
+using FitGames.DAL.Factories;
 using FitGames.DAL.Options;
 using FitGames.DAL.Seeds;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using FitGames.app.ViewModels.Library;
 using FitGames.app.ViewModels.SignIn;
 using FitGames.app.Views.Library;
@@ -30,6 +33,22 @@ namespace FitGames.app
             builder.Logging.AddDebug();
 #endif
 
+            // Configure DAL
+            builder.Services.Configure<DALOptions>(options =>
+            {
+                options.DatabaseDirectory = FileSystem.AppDataDirectory;
+                options.DatabaseName = "FitGames.db";
+                options.SeedDemoData = true;
+            });
+            builder.Services.AddSingleton<IDbContextFactory<FitGamesDbContext>>(provider =>
+            {
+                var dalOptions = provider.GetRequiredService<IOptions<DALOptions>>().Value;
+                return new DbContextSqLiteFactory(dalOptions.DatabaseFilePath);
+            });
+
+            // Register BL services (facades, mappers, UoW)
+            builder.Services.AddBLServices();
+
             // Register Services
             builder.Services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
             builder.Services.AddSingleton<IMessengerService, MessengerService>();
@@ -48,7 +67,11 @@ namespace FitGames.app
 
             builder.Services.AddSingleton<IDbSeeder, DbSeeder>();
 
-            return builder.Build();
+            var app = builder.Build();
+
+            app.Services.GetRequiredService<IDbSeeder>().Seed();
+
+            return app;
         }
     }
 }
