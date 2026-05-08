@@ -27,7 +27,14 @@ public partial class HomeViewModel : ViewModelBase
     [ObservableProperty]
     public partial Genre? SelectedGenre { get; set; }
 
+    [ObservableProperty]
+    public partial Pegi? SelectedPegi { get; set; }
+
+    [ObservableProperty]
+    public partial bool SortAscending { get; set; } = true;
+
     public ObservableCollection<Genre> AvailableGenres { get; } = new(Enum.GetValues<Genre>().Where(g => g != Genre.Unknown));
+    public ObservableCollection<Pegi> AvailablePegis { get; } = new(Enum.GetValues<Pegi>().Where(p => p != Pegi.Unknown));
 
     public HomeViewModel(
         IGameFacade gameFacade,
@@ -50,17 +57,17 @@ public partial class HomeViewModel : ViewModelBase
     {
         IEnumerable<GameListModel> games;
 
-        if (!string.IsNullOrWhiteSpace(SearchText) || (SelectedGenre.HasValue && SelectedGenre.Value != Genre.Unknown))
+        if (!string.IsNullOrWhiteSpace(SearchText) || (SelectedGenre.HasValue && SelectedGenre.Value != Genre.Unknown) || (SelectedPegi.HasValue && SelectedPegi.Value != Pegi.Unknown))
         {
-            games = await _gameFacade.FilterGamesAsync(SearchText, SelectedGenre);
+            games = await _gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);
         }
         else
         {
-            // If no search or filter, get all/paging
             games = await _gameFacade.GetPagingAsync(1, 100);
             
-            // Randomize sort if no filter applies (as requested)
-            games = games.OrderBy(x => Guid.NewGuid()).ToList();
+            games = SortAscending
+                ? games.OrderBy(g => g.Name).ToList()
+                : games.OrderByDescending(g => g.Name).ToList();
         }
 
         Games.Clear();
@@ -77,11 +84,20 @@ public partial class HomeViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void ToggleSort()
+    {
+        SortAscending = !SortAscending;
+        _ = LoadGamesAsync();
+    }
+
+    [RelayCommand]
     private async Task ClearFilterAsync()
     {
         SearchText = string.Empty;
         SelectedGenre = null;
+        SelectedPegi = null;
         IsFilterVisible = false;
+        SortAscending = true;
         await LoadGamesAsync();
     }
 

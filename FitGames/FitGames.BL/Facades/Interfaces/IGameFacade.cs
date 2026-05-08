@@ -6,9 +6,5 @@ namespace FitGames.BL.Facades.Interfaces;
 
 public interface IGameFacade : IFacade<GameEntity, GameListModel, GameDetailModel>
 {
-    Task<IEnumerable<GameListModel>> FilterGamesByNameAsync(string name);
-    Task<IEnumerable<GameListModel>> FilterGamesByGenreAsync(Genre genre);
-    Task<IEnumerable<GameListModel>> FilterGamesByPegiAsync(Pegi pegi);
-    Task<IEnumerable<GameListModel>> GetGamesSortedByNameAsync(bool ascending = true);
-    Task<IEnumerable<GameListModel>> FilterGamesAsync(string? name, Genre? genre);
+    Task<IEnumerable<GameListModel>> FilterGamesAsync(string? name, Genre? genre, Pegi? pegi, bool ascending = true);
 }

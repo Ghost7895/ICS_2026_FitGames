@@ -13,6 +13,7 @@
     <views:ContentPageBase.Resources>
         <ResourceDictionary>
             <conv:ImageUrlToImageSourceConverter x:Key="ImageUrlConverter" />
+            <conv:BoolToSortLabelConverter x:Key="BoolToSortLabelConverter" />
         </ResourceDictionary>
     </views:ContentPageBase.Resources>
 
@@ -30,8 +31,10 @@
         <!-- Search Bar a Filter Tlačidlo -->
         <Grid Grid.Row="1"
               Margin="20,0"
-              ColumnDefinitions="*, Auto"
-              ColumnSpacing="15">
+              ColumnDefinitions="*, Auto, Auto"
+              ColumnSpacing="15"
+              HeightRequest="45">
+              
             <Border Grid.Column="0"
                     Stroke="{AppThemeBinding Light=Black, Dark=White}"
                     StrokeThickness="2"
@@ -44,13 +47,35 @@
                        VerticalOptions="Center" />
             </Border>
 
-            <Button Grid.Column="1"
+            <!-- A→Z Sort Button -->
+            <Border Grid.Column="1"
+                    BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#1a1a1a}"
+                    Stroke="{AppThemeBinding Light=Black, Dark=White}"
+                    StrokeThickness="1"
+                    Padding="12,0"
+                    WidthRequest="50"
+                    VerticalOptions="Fill">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleSortCommand}" />
+                </Border.GestureRecognizers>
+                <Label Text="{Binding SortAscending, Converter={StaticResource BoolToSortLabelConverter}}"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}" 
+                       FontSize="13" FontAttributes="Bold"
+                       HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
+
+            <!-- Filter Button -->
+            <Button Grid.Column="2"
                     ImageSource="filter.png"
+                    Padding="10"
                     BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
                     Command="{Binding ToggleFilterCommand}"
-                    WidthRequest="50" HeightRequest="45"
+                    WidthRequest="50"
                     CornerRadius="8"
-                    VerticalOptions="Center" />
+                    VerticalOptions="Fill" />
         </Grid>
 
         <!-- Filter Sekcia (Skrytá defaultne) -->
@@ -68,9 +93,15 @@
             <VerticalStackLayout Spacing="10">
                 <Label Text="Filter Options" FontAttributes="Bold" />
 
-                <Picker Title="Select Genre"
-                        ItemsSource="{Binding AvailableGenres}"
-                        SelectedItem="{Binding SelectedGenre}" />
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                    <Picker Grid.Column="0" Title="Select Genre"
+                            ItemsSource="{Binding AvailableGenres}"
+                            SelectedItem="{Binding SelectedGenre}" />
+                            
+                    <Picker Grid.Column="1" Title="Select PEGI"
+                            ItemsSource="{Binding AvailablePegis}"
+                            SelectedItem="{Binding SelectedPegi}" />
+                </Grid>
 
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
                     <Button Text="Clear"
