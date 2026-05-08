@@ -21,14 +21,23 @@ public partial class HomeViewModel : ViewModelBase
     [ObservableProperty]
     public partial string SearchText { get; set; } = string.Empty;
 
+    partial void OnSearchTextChanged(string value)
+        => _ = LoadGamesAsync();
+
     [ObservableProperty]
     public partial bool IsFilterVisible { get; set; }
 
     [ObservableProperty]
     public partial Genre? SelectedGenre { get; set; }
 
+    partial void OnSelectedGenreChanged(Genre? value)
+        => _ = LoadGamesAsync();
+
     [ObservableProperty]
     public partial Pegi? SelectedPegi { get; set; }
+
+    partial void OnSelectedPegiChanged(Pegi? value)
+        => _ = LoadGamesAsync();
 
     [ObservableProperty]
     public partial bool SortAscending { get; set; } = true;

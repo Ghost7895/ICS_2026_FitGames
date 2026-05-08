@@ -21,12 +21,19 @@
           RowDefinitions="Auto, Auto, Auto, *"
           RowSpacing="15">
 
-        <Label Grid.Row="0"
-               Margin="20,20,20,0"
-               Text="FitGames"
-               FontSize="32"
-               FontAttributes="Bold"
-               HorizontalOptions="Center" />
+        <HorizontalStackLayout Grid.Row="0"
+                               Margin="20,20,20,0"
+                               Spacing="15"
+                               HorizontalOptions="Center">
+            <Image Source="appicon.png"
+                   WidthRequest="40"
+                   HeightRequest="40"
+                   VerticalOptions="Center" />
+            <Label Text="FitGames"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+        </HorizontalStackLayout>
 
         <!-- Search Bar a Filter Tlačidlo -->
         <Grid Grid.Row="1"
@@ -42,7 +49,6 @@
                     Padding="10,0">
                 <Entry Placeholder="Search games..."
                        Text="{Binding SearchText}"
-                       ReturnCommand="{Binding LoadGamesCommand}"
                        ClearButtonVisibility="WhileEditing"
                        VerticalOptions="Center" />
             </Border>
@@ -53,7 +59,7 @@
                     Stroke="{AppThemeBinding Light=Black, Dark=White}"
                     StrokeThickness="1"
                     Padding="12,0"
-                    WidthRequest="50"
+                    WidthRequest="75"
                     VerticalOptions="Fill">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="8" />
@@ -90,8 +96,8 @@
                 <RoundRectangle CornerRadius="10" />
             </Border.StrokeShape>
 
-            <VerticalStackLayout Spacing="10">
-                <Label Text="Filter Options" FontAttributes="Bold" />
+            <VerticalStackLayout Spacing="15">
+                <Label Text="Filter Options" FontAttributes="Bold" FontSize="16" />
 
                 <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
                     <Picker Grid.Column="0" Title="Select Genre"
@@ -103,14 +109,12 @@
                             SelectedItem="{Binding SelectedPegi}" />
                 </Grid>
 
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
-                    <Button Text="Clear"
-                            Command="{Binding ClearFilterCommand}"
-                            BackgroundColor="Transparent"
-                            TextColor="{AppThemeBinding Light=Black, Dark=White}" />
-                    <Button Text="Apply"
-                            Command="{Binding LoadGamesCommand}" />
-                </HorizontalStackLayout>
+                <Button Text="Clear Filters"
+                        Command="{Binding ClearFilterCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#2A2A2A}"
+                        TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                        HorizontalOptions="End"
+                        Padding="20,8" />
             </VerticalStackLayout>
         </Border>
 
