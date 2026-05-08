@@ -90,6 +90,9 @@
 	  <MauiXaml Update="Resources\Styles\ContentPageStyle.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\CreateUser\CreateUserPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\LibraryPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

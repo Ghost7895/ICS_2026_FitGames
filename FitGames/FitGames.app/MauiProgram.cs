@@ -9,7 +9,6 @@ using FitGames.app.ViewModels.Library;
 using FitGames.app.ViewModels.SignIn;
 using FitGames.app.Views.Library;
 using FitGames.app.ViewModels.CreateUser;
-using FitGames.app.ViewModels.SignIn;
 using FitGames.app.Views.CreateUser;
 using FitGames.app.Views.SignIn;
 using FitGames.app.Services;

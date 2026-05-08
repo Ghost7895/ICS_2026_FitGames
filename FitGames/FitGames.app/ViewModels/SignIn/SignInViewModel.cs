@@ -34,7 +34,7 @@ public partial class SignInViewModel : ViewModelBase
     [RelayCommand]
     private async Task SelectUserAsync(UserListModel user)
     {
-        await _navigationService.GoToAsync("//library");
+        await _navigationService.GoToAsync("//home");
     }
 
     [RelayCommand]
