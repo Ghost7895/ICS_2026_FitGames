@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FitGames.app"
-    xmlns:views="clr-namespace:FitGames.app.Views.Library"
+    xmlns:libraryViews="clr-namespace:FitGames.app.Views.Library"
+    xmlns:signInViews="clr-namespace:FitGames.app.Views.SignIn"
     x:Name="AppShellRoot"
     FlyoutBehavior="Disabled"
     Title="FitGames.app">
@@ -19,11 +20,15 @@
     </Shell.MenuBarItems>
 
     <TabBar>
+        <Tab Route="signin">
+            <ShellContent ContentTemplate="{DataTemplate signInViews:SignInPage}"
+                          Shell.TabBarIsVisible="False" />
+        </Tab>
         <Tab Route="home">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
         </Tab>
         <Tab Route="library">
-            <ShellContent ContentTemplate="{DataTemplate views:LibraryPage}" />
+            <ShellContent ContentTemplate="{DataTemplate libraryViews:LibraryPage}" />
         </Tab>
     </TabBar>
 

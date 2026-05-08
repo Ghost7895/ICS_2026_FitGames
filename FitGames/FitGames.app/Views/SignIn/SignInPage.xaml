@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:FitGames.app.Views"
+             xmlns:vm="clr-namespace:FitGames.app.ViewModels.SignIn"
+             xmlns:models="clr-namespace:FitGames.BL.Models;assembly=FitGames.BL"
+             x:Class="FitGames.app.Views.SignIn.SignInPage"
+             x:DataType="vm:SignInViewModel">
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="30">
+
+        <!-- Header  -->
+        <VerticalStackLayout Grid.Row="0" HorizontalOptions="Center" Spacing="8">
+            <Label Text="Fitgames"
+                   Style="{StaticResource Headline}"
+                   FontAttributes="Bold,Italic" />
+            <Image Source="dotnet_bot.png"
+                   WidthRequest="120"
+                   HeightRequest="80"
+                   Aspect="AspectFit" />
+        </VerticalStackLayout>
+
+        <!-- Body -->
+        <VerticalStackLayout Grid.Row="1" Spacing="16" VerticalOptions="Center">
+
+            <Label Text="Choose your account"
+                   Style="{StaticResource SubHeadline}"
+                   FontAttributes="Bold,Italic" />
+
+            <BoxView HeightRequest="1"
+                     HorizontalOptions="Fill"
+                     Color="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+
+            <!-- User cards and "+" button -->
+            <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+                <CollectionView ItemsSource="{Binding Users}"
+                                HeightRequest="180"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:UserListModel">
+                            <VerticalStackLayout Spacing="8" WidthRequest="120">
+                                <Border WidthRequest="120" HeightRequest="120"
+                                        BackgroundColor="{StaticResource Gray200}"
+                                        Stroke="{StaticResource Gray300}"
+                                        StrokeThickness="1">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8" />
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SignInViewModel}}, Path=SelectUserCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Image Source="dotnet_bot.png" Aspect="AspectFit" Opacity="0.4" />
+                                </Border>
+                                <Label Text="{Binding Username}"
+                                       HorizontalOptions="Center"
+                                       FontSize="14" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Button -->
+                <Button Text="+"
+                        FontSize="32"
+                        WidthRequest="60"
+                        HeightRequest="60"
+                        VerticalOptions="Start"
+                        Margin="0,30,0,0"
+                        Command="{Binding AddUserCommand}" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+
+    </Grid>
+</views:ContentPageBase>

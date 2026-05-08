@@ -1,5 +1,7 @@
 ﻿using FitGames.app.ViewModels.Library;
+using FitGames.app.ViewModels.SignIn;
 using FitGames.app.Views.Library;
+using FitGames.app.Views.SignIn;
 using FitGames.app.Services;
 using FitGames.app.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -31,11 +33,13 @@ namespace FitGames.app
             builder.Services.AddSingleton<IAlertService, AlertService>();
 
             // Register ViewModels
+            builder.Services.AddTransient<SignInViewModel>();
             builder.Services.AddTransient<LibraryViewModel>();
 
-            // Register Views 
+            // Register Views
             builder.Services.AddTransient<AppShell>();
             builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<SignInPage>();
             builder.Services.AddTransient<LibraryPage>();
 
             return builder.Build();
