@@ -7,28 +7,30 @@
     xmlns:views="clr-namespace:FitGames.app.Views.Library"
     xmlns:gameViews="clr-namespace:FitGames.app.Views.Game"
     x:Name="AppShellRoot"
-    FlyoutBehavior="Disabled"
+    FlyoutBehavior="Locked"
     Title="FitGames.app">
 
-    <Shell.MenuBarItems>
-        <MenuBarItem Text="File">
-            <MenuFlyoutItem Text="Home"
-                            Command="{Binding Source={x:Reference AppShellRoot}, Path=GoToHomeCommand}" />
-            <MenuFlyoutItem Text="Library"
-                            Command="{Binding Source={x:Reference AppShellRoot}, Path=GoToLibraryCommand}" />
-            <MenuFlyoutItem Text="Library"
-                Command="{Binding GoToLibraryCommand}" />
-        </MenuBarItem>
-    </Shell.MenuBarItems>
+    <Shell.FlyoutHeader>
+        <HorizontalStackLayout Padding="20" Spacing="15">
+            <Image Source="dotnet_bot.png" WidthRequest="40" HeightRequest="40"/>
+            <Label Text="FitGames" FontSize="20" FontAttributes="Bold" VerticalOptions="Center"/>
+        </HorizontalStackLayout>
+    </Shell.FlyoutHeader>
 
-    <TabBar>
-        <Tab Route="home">
-            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
-        </Tab>
-        <Tab Route="library">
-            <ShellContent ContentTemplate="{DataTemplate views:LibraryPage}" />
-        </Tab>
-    </TabBar><MenuFlyoutItem Text="Library"
-                Command="{Binding GoToLibraryCommand}" />
+    <FlyoutItem Title="Home" Icon="home_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Profile" Icon="profile_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Library" Icon="library_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate views:LibraryPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings" Icon="settings_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
 
 </Shell>
