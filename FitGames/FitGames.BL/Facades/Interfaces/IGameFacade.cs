@@ -8,4 +8,6 @@ public interface IGameFacade : IFacade<GameEntity, GameListModel, GameDetailMode
 {
     Task<IEnumerable<GameListModel>> FilterGamesByNameAsync(string name);
     Task<IEnumerable<GameListModel>> FilterGamesByGenreAsync(Genre genre);
+    Task<IEnumerable<GameListModel>> FilterGamesByPegiAsync(Pegi pegi);
+    Task<IEnumerable<GameListModel>> GetGamesSortedByNameAsync(bool ascending = true);
 }

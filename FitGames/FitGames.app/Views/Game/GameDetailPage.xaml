@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:FitGames.app.Views"
+                       xmlns:vm="clr-namespace:FitGames.app.ViewModels.Game"
+                       x:Class="FitGames.app.Views.Game.GameDetailPage"
+                       x:DataType="vm:GameDetailViewModel"
+                       Title="{Binding Game.Name}">
+
+    <Grid RowDefinitions="Auto, *" RowSpacing="20" Padding="20">
+
+        <Button Grid.Row="0"
+                Text="Back"
+                HorizontalOptions="Start"
+                CornerRadius="5"
+                Command="{Binding GoBackCommand}" />
+
+        <ScrollView Grid.Row="1">
+            <Grid RowDefinitions="Auto, Auto, Auto, Auto" RowSpacing="20">
+
+                <Border Grid.Row="0" HeightRequest="220">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Image Source="{Binding Game.ImageUrl}"
+                           Aspect="AspectFill"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill" />
+                </Border>
+
+                <Label Grid.Row="1"
+                       Text="{Binding Game.Name}"
+                       FontSize="24"
+                       FontAttributes="Bold" />
+
+                <HorizontalStackLayout Grid.Row="2" Spacing="12">
+                    <Label Text="{Binding Game.Genre}" FontSize="14" />
+                    <Label Text="{Binding Game.Pegi}" FontSize="14" />
+                </HorizontalStackLayout>
+
+                <Label Grid.Row="3"
+                       Text="{Binding Game.Description}"
+                       FontSize="14"
+                       LineBreakMode="WordWrap" />
+
+            </Grid>
+        </ScrollView>
+
+    </Grid>
+</views:ContentPageBase>

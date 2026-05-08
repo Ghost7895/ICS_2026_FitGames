@@ -1,0 +1,86 @@
+﻿using FitGames.DAL.Options;
+using FitGames.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
+namespace FitGames.DAL.Seeds;
+
+public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOptions<DALOptions> options)
+    : IDbSeeder
+{
+    public void Seed()
+    {
+        using FitGamesDbContext dbContext = dbContextFactory.CreateDbContext();
+
+        if (options.Value.SeedDemoData is false)
+        {
+            return;
+        }
+
+        // ---- Developers ----
+        foreach (var developer in new[]
+        {
+            DeveloperSeeds.Valve, DeveloperSeeds.CDProjekt, DeveloperSeeds.Rockstar,
+            DeveloperSeeds.Naughty, DeveloperSeeds.Mojang,
+        })
+        {
+            if (!dbContext.Set<DeveloperEntity>().Any(d => d.Id == developer.Id))
+                dbContext.Set<DeveloperEntity>().Add(developer);
+        }
+
+        // ---- Games ----
+        foreach (var game in new[]
+        {
+            GameSeeds.CS2, GameSeeds.Witcher3, GameSeeds.GTA5,
+            GameSeeds.LastOfUs, GameSeeds.Minecraft, GameSeeds.Portal2,
+        })
+        {
+            if (!dbContext.Set<GameEntity>().Any(g => g.Id == game.Id))
+                dbContext.Set<GameEntity>().Add(game with { Developer = null! });
+        }
+
+        // ---- Users ----
+        foreach (var user in new[]
+        {
+            UserSeeds.Alice, UserSeeds.Bob,
+        })
+        {
+            if (!dbContext.Set<UserEntity>().Any(u => u.Id == user.Id))
+                dbContext.Set<UserEntity>().Add(user with { Library = null! });
+        }
+
+        // ---- Libraries ----
+        foreach (var library in new[]
+        {
+            LibrarySeeds.AlicesLibrary, LibrarySeeds.BobsLibrary, LibrarySeeds.SharedLibrary,
+        })
+        {
+            if (!dbContext.Set<LibraryEntity>().Any(l => l.Id == library.Id))
+                dbContext.Set<LibraryEntity>().Add(library);
+        }
+
+        // ---- LibraryGames----
+        foreach (var seed in new[]
+        {
+            LibraryGameSeeds.AliceCS2, LibraryGameSeeds.AliceWitcher3,
+            LibraryGameSeeds.AliceMinecraft, LibraryGameSeeds.AliceGTA5,
+            LibraryGameSeeds.AlicePortal2,
+            LibraryGameSeeds.BobGTA5, LibraryGameSeeds.BobLastOfUs,
+            LibraryGameSeeds.BobPortal2, LibraryGameSeeds.BobCS2,
+            LibraryGameSeeds.BobMinecraft, LibraryGameSeeds.BobWitcher3,
+            LibraryGameSeeds.SharedWitcher3, LibraryGameSeeds.SharedMinecraft,
+            LibraryGameSeeds.SharedPortal2, LibraryGameSeeds.SharedCS2,
+            LibraryGameSeeds.SharedGTA5, LibraryGameSeeds.SharedLastOfUs,
+        })
+        {
+            if (!dbContext.Set<LibraryGameEntity>().Any(lg =>
+                lg.LibraryId == seed.LibraryId && lg.GameId == seed.GameId))
+            {
+                dbContext.Set<LibraryGameEntity>().Add(
+                    seed with { Library = null!, Game = null! });
+            }
+        }
+
+        dbContext.SaveChanges();
+    }
+}

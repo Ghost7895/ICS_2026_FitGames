@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FitGames.app.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FitGames.app"
+    xmlns:views="clr-namespace:FitGames.app.Views.Library"
+    xmlns:gameViews="clr-namespace:FitGames.app.Views.Game"
+    x:Name="AppShellRoot"
+    FlyoutBehavior="Locked"
+    Title="FitGames">
+
+    <Shell.FlyoutHeader>
+        <HorizontalStackLayout Padding="20" Spacing="15">
+            <Image Source="dotnet_bot.png" WidthRequest="40" HeightRequest="40"/>
+            <Label Text="FitGames" FontSize="20" FontAttributes="Bold" VerticalOptions="Center"/>
+        </HorizontalStackLayout>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="Home" Icon="home_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Profile" Icon="profile_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Library" Icon="library_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate views:LibraryPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings" Icon="settings_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+
+</Shell>
