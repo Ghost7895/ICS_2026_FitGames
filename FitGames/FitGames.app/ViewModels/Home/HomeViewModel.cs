@@ -105,7 +105,6 @@ public partial class HomeViewModel : ViewModelBase
         SearchText = string.Empty;
         SelectedGenre = null;
         SelectedPegi = null;
-        IsFilterVisible = false;
         SortAscending = true;
         await LoadGamesAsync();
     }

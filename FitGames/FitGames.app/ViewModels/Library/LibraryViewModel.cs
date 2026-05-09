@@ -72,7 +72,6 @@ public partial class LibraryViewModel(
         SearchText = string.Empty;
         SelectedGenre = null;
         SelectedPegi = null;
-        IsFilterVisible = false;
         SortAscending = true;
         await LoadDataAsync();
     }

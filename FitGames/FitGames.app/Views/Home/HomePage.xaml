@@ -67,6 +67,17 @@
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ToggleSortCommand}" />
                 </Border.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#D0D0D0, Dark=#2a2a2a}" />
+                                <Setter Property="Scale" Value="1.05" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
                 <Label Text="{Binding SortAscending, Converter={StaticResource BoolToSortLabelConverter}}"
                        TextColor="{AppThemeBinding Light=Black, Dark=White}" 
                        FontSize="13" FontAttributes="Bold"
@@ -74,14 +85,31 @@
             </Border>
 
             <!-- Filter Button -->
-            <Button Grid.Column="2"
-                    ImageSource="filter.png"
-                    Padding="10"
+            <Border Grid.Column="2"
                     BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
-                    Command="{Binding ToggleFilterCommand}"
+                    Stroke="Transparent"
+                    Padding="10"
                     WidthRequest="50"
-                    CornerRadius="8"
-                    VerticalOptions="Fill" />
+                    VerticalOptions="Fill">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleFilterCommand}" />
+                </Border.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="1.1" />
+                                <Setter Property="Opacity" Value="0.85" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Image Source="filter.png" />
+            </Border>
         </Grid>
 
         <!-- Filter Sekcia (Skrytá defaultne) -->
@@ -90,31 +118,127 @@
                 IsVisible="{Binding IsFilterVisible}"
                 Stroke="{AppThemeBinding Light=LightGray, Dark=DarkGray}"
                 StrokeThickness="1"
-                Padding="15"
+                Padding="12"
                 BackgroundColor="{AppThemeBinding Light=#F9F9F9, Dark=#2A2A2A}">
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="10" />
             </Border.StrokeShape>
 
-            <VerticalStackLayout Spacing="15">
-                <Label Text="Filter Options" FontAttributes="Bold" FontSize="16" />
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Filter Options" FontAttributes="Bold" FontSize="15" />
 
-                <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
-                    <Picker Grid.Column="0" Title="Select Genre"
-                            ItemsSource="{Binding AvailableGenres}"
-                            SelectedItem="{Binding SelectedGenre}" />
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                    <Border Grid.Column="0"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1a1a1a}"
+                            Stroke="{AppThemeBinding Light=#CCCCCC, Dark=#444444}"
+                            StrokeThickness="1"
+                            Padding="10,6"
+                            HeightRequest="52">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6" />
+                        </Border.StrokeShape>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F5F5F5, Dark=#252525}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid RowDefinitions="Auto, Auto">
+                            <Label Text="Genre" 
+                                   FontSize="10" 
+                                   TextColor="{AppThemeBinding Light=#666666, Dark=#999999}"
+                                   Grid.Row="0" />
+                            <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
+                                <Label Text="{Binding SelectedGenre, TargetNullValue='All genres'}" 
+                                       TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                       FontSize="13"
+                                       VerticalOptions="Center" />
+                                <Label Text="▼" 
+                                       Grid.Column="1" 
+                                       FontSize="9"
+                                       TextColor="{AppThemeBinding Light=#666666, Dark=#999999}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                            <Picker ItemsSource="{Binding AvailableGenres}"
+                                    SelectedItem="{Binding SelectedGenre}"
+                                    Opacity="0"
+                                    Grid.RowSpan="2" />
+                        </Grid>
+                    </Border>
                             
-                    <Picker Grid.Column="1" Title="Select PEGI"
-                            ItemsSource="{Binding AvailablePegis}"
-                            SelectedItem="{Binding SelectedPegi}" />
+                    <Border Grid.Column="1"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1a1a1a}"
+                            Stroke="{AppThemeBinding Light=#CCCCCC, Dark=#444444}"
+                            StrokeThickness="1"
+                            Padding="10,6"
+                            HeightRequest="52">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6" />
+                        </Border.StrokeShape>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F5F5F5, Dark=#252525}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid RowDefinitions="Auto, Auto">
+                            <Label Text="PEGI" 
+                                   FontSize="10" 
+                                   TextColor="{AppThemeBinding Light=#666666, Dark=#999999}"
+                                   Grid.Row="0" />
+                            <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
+                                <Label Text="{Binding SelectedPegi, TargetNullValue='All ratings'}" 
+                                       TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                       FontSize="13"
+                                       VerticalOptions="Center" />
+                                <Label Text="▼" 
+                                       Grid.Column="1" 
+                                       FontSize="9"
+                                       TextColor="{AppThemeBinding Light=#666666, Dark=#999999}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                            <Picker ItemsSource="{Binding AvailablePegis}"
+                                    SelectedItem="{Binding SelectedPegi}"
+                                    Opacity="0"
+                                    Grid.RowSpan="2" />
+                        </Grid>
+                    </Border>
                 </Grid>
 
-                <Button Text="Clear Filters"
-                        Command="{Binding ClearFilterCommand}"
-                        BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#2A2A2A}"
-                        TextColor="{AppThemeBinding Light=Black, Dark=White}"
-                        HorizontalOptions="End"
-                        Padding="20,8" />
+                <Border BackgroundColor="{AppThemeBinding Light=#C0C0C0, Dark=#1a1a1a}"
+                        Stroke="Transparent"
+                        Padding="16,6"
+                        HorizontalOptions="End">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="5" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ClearFilterCommand}" />
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#A0A0A0, Dark=#2a2a2a}" />
+                                    <Setter Property="Scale" Value="1.05" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label Text="Clear Filters"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                           FontSize="13"
+                           VerticalOptions="Center" />
+                </Border>
             </VerticalStackLayout>
         </Border>
 
@@ -146,12 +270,34 @@
                                 CommandParameter="{Binding Id}" />
                         </Border.GestureRecognizers>
 
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter TargetName="DarkOverlay" Property="BoxView.Opacity" Value="0.3" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="Scale" Value="1.05" />
+                                        <Setter Property="Shadow">
+                                            <Setter.Value>
+                                                <Shadow Brush="Black" Opacity="0.5" Radius="15" Offset="0,5" />
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter TargetName="DarkOverlay" Property="BoxView.Opacity" Value="0.5" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
                         <Grid>
                             <Image HorizontalOptions="Fill" VerticalOptions="Fill"
                                    Aspect="AspectFill"
                                    Source="{Binding ImageUrl, Converter={StaticResource ImageUrlConverter}}"
-                                   Opacity="0.9" />
-                            <BoxView Opacity="0.3" Color="Black" />
+                                   Opacity="0.9"
+                                   x:Name="GameImage" />
+                            <BoxView Opacity="0.3" Color="Black" x:Name="DarkOverlay" />
                             <VerticalStackLayout VerticalOptions="End" Margin="12,10">
                                 <Label FontSize="14" LineBreakMode="WordWrap"
                                        Text="{Binding Name}"
