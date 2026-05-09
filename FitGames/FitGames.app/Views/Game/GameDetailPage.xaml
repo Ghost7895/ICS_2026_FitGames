@@ -3,9 +3,14 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:FitGames.app.Views"
                        xmlns:vm="clr-namespace:FitGames.app.ViewModels.Game"
+                       xmlns:local="clr-namespace:FitGames.app.Converters"
                        x:Class="FitGames.app.Views.Game.GameDetailPage"
                        x:DataType="vm:GameDetailViewModel"
                        Title="{Binding Game.Name}">
+
+    <views:ContentPageBase.Resources>
+        <local:PegiToImageConverter x:Key="PegiConverter" />
+    </views:ContentPageBase.Resources>
 
     <Grid RowDefinitions="Auto, *" RowSpacing="20" Padding="20">
 
@@ -19,12 +24,12 @@
             <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="Auto, Auto"  RowSpacing="10">
 
 
-                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HeightRequest="420" HorizontalOptions="Center">
+                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" MaximumWidthRequest="750" HeightRequest="420" HorizontalOptions="Center">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
                     <Image Source="{Binding Game.ImageUrl}"
-                           Aspect="AspectFit"
+                           Aspect="AspectFill"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
                     
@@ -65,13 +70,15 @@
                            HorizontalOptions="Start"
                            FontSize="14" />
 
-                <Label Text="{Binding Game.Pegi, StringFormat='Pegi: {0}'}" 
-                           Grid.Row="5" 
-                           Grid.Column="0"
-                           Grid.ColumnSpan="2"
-                           HorizontalTextAlignment="End" 
-                           HorizontalOptions="End"
-                           FontSize="14"/>
+
+                <Image Source="{Binding Game.Pegi, Converter={StaticResource PegiConverter}, TargetNullValue=''}"
+                       WidthRequest="75" HeightRequest="75"  
+                       Aspect="AspectFit"
+                       Grid.Row="5" 
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalOptions="End" />
+
 
             </Grid>
         </ScrollView>
