@@ -16,32 +16,62 @@
                 Command="{Binding GoBackCommand}" />
 
         <ScrollView Grid.Row="1">
-            <Grid RowDefinitions="Auto, Auto, Auto, Auto" RowSpacing="20">
+            <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="Auto, Auto"  RowSpacing="10">
 
-                <Border Grid.Row="0" HeightRequest="220">
+
+                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HeightRequest="420" HorizontalOptions="Center">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
                     <Image Source="{Binding Game.ImageUrl}"
-                           Aspect="AspectFill"
+                           Aspect="AspectFit"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
+                    
                 </Border>
 
-                <Label Grid.Row="1"
+                <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        HorizontalOptions="End"
+                        Text="Launch game"
+                        FontSize="14"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                        Text="{Binding Game.Name}"
                        FontSize="24"
+                       HorizontalTextAlignment="Center" 
+                       HorizontalOptions="Center" 
                        FontAttributes="Bold" />
 
-                <HorizontalStackLayout Grid.Row="2" Spacing="12">
-                    <Label Text="{Binding Game.Genre}" FontSize="14" />
-                    <Label Text="{Binding Game.Pegi}" FontSize="14" />
-                </HorizontalStackLayout>
+                <Label Text="{Binding Game.DeveloperName}" 
+                       Grid.Row="3"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalTextAlignment="Center" 
+                       HorizontalOptions="Center"
+                       FontSize="14" />
 
-                <Label Grid.Row="3"
+                <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
                        Text="{Binding Game.Description}"
                        FontSize="14"
+                       HorizontalTextAlignment="Center" 
+                       HorizontalOptions="Center"
                        LineBreakMode="WordWrap" />
+
+                <Label Text="{Binding Game.Genre, StringFormat='Genre: {0}'}" 
+                           Grid.Row="5"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           HorizontalTextAlignment="Start" 
+                           HorizontalOptions="Start"
+                           FontSize="14" />
+
+                <Label Text="{Binding Game.Pegi, StringFormat='Pegi: {0}'}" 
+                           Grid.Row="5" 
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           HorizontalTextAlignment="End" 
+                           HorizontalOptions="End"
+                           FontSize="14"/>
 
             </Grid>
         </ScrollView>

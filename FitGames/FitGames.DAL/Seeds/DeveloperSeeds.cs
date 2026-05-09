@@ -35,6 +35,36 @@ public static class DeveloperSeeds
         Name = "Mojang Studios"
     };
 
+    public static readonly DeveloperEntity Arkane = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000006"),
+        Name = "Arkane Studios"
+    };
+
+    public static readonly DeveloperEntity Capcom = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000007"),
+        Name = "CAPCOM"
+    };
+
+    public static readonly DeveloperEntity Fumi = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000008"),
+        Name = "Fumi Games"
+    };
+
+    public static readonly DeveloperEntity FromSoft = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000009"),
+        Name = "FromSoftware"
+    };
+
+    public static readonly DeveloperEntity FourAGames = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000010"),
+        Name = "4A Games"
+    };
+
     public static DbContext SeedDevelopers(this DbContext dbx)
     {
         dbx.Set<DeveloperEntity>().AddRange(
