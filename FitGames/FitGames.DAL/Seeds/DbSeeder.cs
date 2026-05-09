@@ -12,6 +12,8 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
     {
         using FitGamesDbContext dbContext = dbContextFactory.CreateDbContext();
 
+        dbContext.Database.EnsureCreated();
+
         if (options.Value.SeedDemoData is false)
         {
             return;

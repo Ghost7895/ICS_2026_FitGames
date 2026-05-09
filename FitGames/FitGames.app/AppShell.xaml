@@ -5,20 +5,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FitGames.app"
     xmlns:views="clr-namespace:FitGames.app.Views.Library"
-    xmlns:gameViews="clr-namespace:FitGames.app.Views.Game"
+    xmlns:homeViews="clr-namespace:FitGames.app.Views.Home"
     x:Name="AppShellRoot"
     FlyoutBehavior="Locked"
     Title="FitGames">
 
     <Shell.FlyoutHeader>
         <HorizontalStackLayout Padding="20" Spacing="15">
-            <Image Source="dotnet_bot.png" WidthRequest="40" HeightRequest="40"/>
+            <Image Source="icon.png" WidthRequest="40" HeightRequest="40"/>
             <Label Text="FitGames" FontSize="20" FontAttributes="Bold" VerticalOptions="Center"/>
         </HorizontalStackLayout>
     </Shell.FlyoutHeader>
 
     <FlyoutItem Title="Home" Icon="home_icon.png">
-        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        <ShellContent ContentTemplate="{DataTemplate homeViews:HomePage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Profile" Icon="profile_icon.png">

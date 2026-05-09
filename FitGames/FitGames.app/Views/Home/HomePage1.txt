@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:FitGames.app.Views"
+             xmlns:vm="clr-namespace:FitGames.app.ViewModels.Home"
+             xmlns:conv="clr-namespace:FitGames.app.Converters;assembly=FitGames.app"
+             xmlns:bl="clr-namespace:FitGames.BL.Models;assembly=FitGames.BL"
+             x:Class="FitGames.app.Views.Home.HomePage"
+             x:DataType="vm:HomeViewModel"
+             Title="Home">
+
+    <views:ContentPageBase.Resources>
+        <ResourceDictionary>
+            <conv:ImageUrlToImageSourceConverter x:Key="ImageUrlConverter" />
+        </ResourceDictionary>
+    </views:ContentPageBase.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *" Padding="20" RowSpacing="15">
+        
+        <Label Grid.Row="0"
+               Text="FitGames"
+               FontSize="32"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <!-- Search Bar a Filter Tlačidlo -->
+        <Grid Grid.Row="1" ColumnDefinitions="*, Auto" ColumnSpacing="15">
+            <Border Grid.Column="0"
+                    Stroke="{AppThemeBinding Light=Black, Dark=White}"
+                    StrokeThickness="2"
+                    BackgroundColor="Transparent"
+                    Padding="10,0">
+                <Entry Placeholder="Search games..."
+                       Text="{Binding SearchText}"
+                       ReturnCommand="{Binding LoadGamesCommand}"
+                       ClearButtonVisibility="WhileEditing"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <!-- Tlačidlo na Filter (ikona, ale použijeme dotnet_bot ako placeholder zatiaľ, alebo len Button) -->
+            <Button Grid.Column="1"
+                    Text="Filter"
+                    Command="{Binding ToggleFilterCommand}"
+                    VerticalOptions="Center"
+                    HeightRequest="40" />
+        </Grid>
+
+        <!-- Filter Sekcia (Skrytá defaultne) -->
+        <Border Grid.Row="2"
+                IsVisible="{Binding IsFilterVisible}"
+                Stroke="{AppThemeBinding Light=LightGray, Dark=DarkGray}"
+                StrokeThickness="1"
+                Padding="15"
+                BackgroundColor="{AppThemeBinding Light=#F9F9F9, Dark=#2A2A2A}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10" />
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Filter Options" FontAttributes="Bold" />
+                
+                <Picker Title="Select Genre"
+                        ItemsSource="{Binding AvailableGenres}"
+                        SelectedItem="{Binding SelectedGenre}" />
+                
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                    <Button Text="Clear"
+                            Command="{Binding ClearFilterCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                    <Button Text="Apply"
+                            Command="{Binding LoadGamesCommand}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Dlazdicovy Zoznam Hier -->
+        <ScrollView Grid.Row="3">
+            <CollectionView ItemsSource="{Binding Games}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3"
+                                     VerticalItemSpacing="15" HorizontalItemSpacing="15" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="bl:GameListModel">
+                        <Border Padding="0"
+                                Stroke="Transparent"
+                                BackgroundColor="#E0E0E0"
+                                HeightRequest="150">
+                            
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=GoToDetailCommand}"
+                                    CommandParameter="{Binding Id}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid>
+                                <Image HorizontalOptions="Fill" VerticalOptions="Fill"
+                                       Aspect="AspectFill"
+                                       Source="{Binding ImageUrl, Converter={StaticResource ImageUrlConverter}}"
+                                       Opacity="0.9" />
+                                <BoxView Opacity="0.3" Color="Black" />
+                                <VerticalStackLayout VerticalOptions="End" Margin="12,10">
+                                    <Label FontSize="14" LineBreakMode="WordWrap"
+                                           Text="{Binding Name}"
+                                           TextColor="White" FontAttributes="Bold" />
+                                    <Label FontSize="10"
+                                           Text="{Binding Genre}"
+                                           TextColor="LightGray" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                        <Label Text="No games found." FontSize="16" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </ScrollView>
+    </Grid>
+
+</views:ContentPageBase>

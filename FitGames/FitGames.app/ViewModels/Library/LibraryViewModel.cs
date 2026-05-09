@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -41,52 +42,49 @@ public partial class LibraryViewModel(
     private Genre? _selectedGenre = null;
 
     [ObservableProperty]
-    private bool _isPegiDropdownOpen = false;
+    public partial bool IsFilterVisible { get; set; }
 
-    [ObservableProperty]
-    private bool _isGenreDropdownOpen = false;
+    public ObservableCollection<Genre> AvailableGenres { get; } = new(Enum.GetValues<Genre>().Where(g => g != Genre.Unknown));
+    public ObservableCollection<Pegi> AvailablePegis { get; } = new(Enum.GetValues<Pegi>().Where(p => p != Pegi.Unknown));
 
-    public string PegiButtonLabel => SelectedPegi switch
+    [RelayCommand]
+    private async Task LoadGamesManuallyAsync()
     {
-        Pegi.Pegi3 => "PEGI 3+",
-        Pegi.Pegi7 => "PEGI 7+",
-        Pegi.Pegi12 => "PEGI 12+",
-        Pegi.Pegi16 => "PEGI 16+",
-        Pegi.Pegi18 => "PEGI 18+",
-        _ => "PEGI"
-    };
+        await LoadDataAsync();
+    }
 
-    public string GenreButtonLabel => SelectedGenre switch
+    [RelayCommand]
+    private void ToggleFilter()
     {
-        Genre.Action => "Action",
-        Genre.RolePlaying => "RPG",
-        Genre.Adventure => "Adventure",
-        Genre.Sandbox => "Sandbox",
-        Genre.Puzzle => "Puzzle",
-        _ => "Genre"
-    };
+        IsFilterVisible = !IsFilterVisible;
+    }
 
+    [RelayCommand]
+    private void ToggleSort()
+    {
+        SortAscending = !SortAscending;
+        _ = LoadDataAsync();
+    }
 
+    [RelayCommand]
+    private async Task ClearFilterAsync()
+    {
+        SearchText = string.Empty;
+        SelectedGenre = null;
+        SelectedPegi = null;
+        IsFilterVisible = false;
+        SortAscending = true;
+        await LoadDataAsync();
+    }
 
     partial void OnSearchTextChanged(string value)
         => _ = LoadDataAsync();
 
-    partial void OnSortAscendingChanged(bool value)
+    partial void OnSelectedPegiChanged(Pegi? value)
         => _ = LoadDataAsync();
 
-    partial void OnSelectedPegiChanged(Pegi? value)
-    {
-        IsPegiDropdownOpen = false;
-        OnPropertyChanged(nameof(PegiButtonLabel));
-        _ = LoadDataAsync();
-    }
-
     partial void OnSelectedGenreChanged(Genre? value)
-    {
-        IsGenreDropdownOpen = false;
-        OnPropertyChanged(nameof(GenreButtonLabel));
-        _ = LoadDataAsync();
-    }
+        => _ = LoadDataAsync();
 
     protected override async Task LoadDataAsync()
     {
@@ -117,63 +115,10 @@ public partial class LibraryViewModel(
 
         HashSet<Guid> libraryGameIds = detail.Games.Select(g => g.Id).ToHashSet();
 
-        // Base query — name search or all sorted
-        IEnumerable<GameListModel> result = string.IsNullOrWhiteSpace(SearchText)
-            ? await gameFacade.GetGamesSortedByNameAsync(SortAscending)
-            : await gameFacade.FilterGamesByNameAsync(SearchText);
-
-        // PEGI filter (DB)
-        if (SelectedPegi is not null)
-        {
-            IEnumerable<GameListModel> pegiFiltered = await gameFacade.FilterGamesByPegiAsync(SelectedPegi.Value);
-            HashSet<Guid> pegiIds = pegiFiltered.Select(g => g.Id).ToHashSet();
-            result = result.Where(g => pegiIds.Contains(g.Id));
-        }
-
-        // Genre filter (DB)
-        if (SelectedGenre is not null)
-        {
-            IEnumerable<GameListModel> genreFiltered = await gameFacade.FilterGamesByGenreAsync(SelectedGenre.Value);
-            HashSet<Guid> genreIds = genreFiltered.Select(g => g.Id).ToHashSet();
-            result = result.Where(g => genreIds.Contains(g.Id));
-        }
-
-        // If searching, sort was not applied by DB so apply in memory
-        if (!string.IsNullOrWhiteSpace(SearchText))
-        {
-            result = SortAscending
-                ? result.OrderBy(g => g.Name)
-                : result.OrderByDescending(g => g.Name);
-        }
+        IEnumerable<GameListModel> result = await gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);
 
         return result.Where(g => libraryGameIds.Contains(g.Id));
     }
-
-    [RelayCommand]
-    private void ToggleSort()
-        => SortAscending = !SortAscending;
-
-    [RelayCommand]
-    private void TogglePegiDropdown()
-    {
-        IsPegiDropdownOpen = !IsPegiDropdownOpen;
-        IsGenreDropdownOpen = false;
-    }
-
-    [RelayCommand]
-    private void ToggleGenreDropdown()
-    {
-        IsGenreDropdownOpen = !IsGenreDropdownOpen;
-        IsPegiDropdownOpen = false;
-    }
-
-    [RelayCommand]
-    private void SetPegiFilter(Pegi? pegi)
-        => SelectedPegi = SelectedPegi == pegi ? null : pegi;
-
-    [RelayCommand]
-    private void SetGenreFilter(Genre? genre)
-        => SelectedGenre = SelectedGenre == genre ? null : genre;
 
     [RelayCommand]
     private async Task GoToDetailAsync(Guid id)

@@ -2,14 +2,13 @@
 <views:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:FitGames.app.Views"
+             xmlns:vm="clr-namespace:FitGames.app.ViewModels.Home"
              xmlns:conv="clr-namespace:FitGames.app.Converters;assembly=FitGames.app"
              xmlns:bl="clr-namespace:FitGames.BL.Models;assembly=FitGames.BL"
-             xmlns:vm="clr-namespace:FitGames.app.ViewModels.Library"
-             xmlns:enums="clr-namespace:FitGames.DAL.Enums;assembly=FitGames.DAL"
-             x:Class="FitGames.app.Views.Library.LibraryPage"
-             x:DataType="vm:LibraryViewModel"
-             x:Name="LibraryPageRoot"
-             Title="Library">
+             x:Class="FitGames.app.Views.Home.HomePage"
+             x:DataType="vm:HomeViewModel"
+             x:Name="HomePageRoot"
+             Title="Home">
 
     <views:ContentPageBase.Resources>
         <ResourceDictionary>
@@ -30,19 +29,19 @@
                    WidthRequest="40"
                    HeightRequest="40"
                    VerticalOptions="Center" />
-            <Label Text="{Binding LibraryTitle}"
+            <Label Text="FitGames"
                    FontSize="32"
                    FontAttributes="Bold"
                    VerticalOptions="Center" />
         </HorizontalStackLayout>
 
-        <!-- Search Bar, Sort Toggle and Filter Tlačidlo -->
+        <!-- Search Bar a Filter Tlačidlo -->
         <Grid Grid.Row="1"
               Margin="20,0"
               ColumnDefinitions="*, Auto, Auto"
               ColumnSpacing="15"
               HeightRequest="45">
-
+              
             <Border Grid.Column="0"
                     Stroke="{AppThemeBinding Light=Black, Dark=White}"
                     StrokeThickness="2"
@@ -69,7 +68,7 @@
                     <TapGestureRecognizer Command="{Binding ToggleSortCommand}" />
                 </Border.GestureRecognizers>
                 <Label Text="{Binding SortAscending, Converter={StaticResource BoolToSortLabelConverter}}"
-                       TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}" 
                        FontSize="13" FontAttributes="Bold"
                        HorizontalOptions="Center" VerticalOptions="Center" />
             </Border>
@@ -104,7 +103,7 @@
                     <Picker Grid.Column="0" Title="Select Genre"
                             ItemsSource="{Binding AvailableGenres}"
                             SelectedItem="{Binding SelectedGenre}" />
-
+                            
                     <Picker Grid.Column="1" Title="Select PEGI"
                             ItemsSource="{Binding AvailablePegis}"
                             SelectedItem="{Binding SelectedPegi}" />
@@ -125,8 +124,10 @@
                         HorizontalOptions="Fill"
                         ItemsSource="{Binding Games}">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="2"
-                                 VerticalItemSpacing="15" HorizontalItemSpacing="15" />
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2"
+                                 VerticalItemSpacing="15"
+                                 HorizontalItemSpacing="15" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
@@ -141,7 +142,7 @@
 
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference LibraryPageRoot}, Path=BindingContext.GoToDetailCommand}"
+                                Command="{Binding Source={x:Reference HomePageRoot}, Path=BindingContext.GoToDetailCommand}"
                                 CommandParameter="{Binding Id}" />
                         </Border.GestureRecognizers>
 

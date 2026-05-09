@@ -10,39 +10,31 @@
              x:DataType="vm:LibraryViewModel"
              x:Name="LibraryPageRoot"
              Title="Library">
+             
+	<views:ContentPageBase.Resources>
+		<ResourceDictionary>
+			<conv:ImageUrlToImageSourceConverter x:Key="ImageUrlConverter" />
+			<conv:BoolToSortLabelConverter x:Key="BoolToSortLabelConverter" />
+		</ResourceDictionary>
+	</views:ContentPageBase.Resources>
 
-    <views:ContentPageBase.Resources>
-        <ResourceDictionary>
-            <conv:ImageUrlToImageSourceConverter x:Key="ImageUrlConverter" />
-            <conv:BoolToSortLabelConverter x:Key="BoolToSortLabelConverter" />
-        </ResourceDictionary>
-    </views:ContentPageBase.Resources>
-
-    <Grid HorizontalOptions="Fill"
+	<Grid HorizontalOptions="Fill"
           RowDefinitions="Auto, Auto, Auto, *"
           RowSpacing="15">
 
-        <HorizontalStackLayout Grid.Row="0"
-                               Margin="20,20,20,0"
-                               Spacing="15"
-                               HorizontalOptions="Center">
-            <Image Source="appicon.png"
-                   WidthRequest="40"
-                   HeightRequest="40"
-                   VerticalOptions="Center" />
-            <Label Text="{Binding LibraryTitle}"
-                   FontSize="32"
-                   FontAttributes="Bold"
-                   VerticalOptions="Center" />
-        </HorizontalStackLayout>
+		<Label Grid.Row="0"
+               Margin="20,20,20,0"
+			   Text="{Binding LibraryTitle}"
+			   FontSize="32" FontAttributes="Bold"
+			   HorizontalOptions="Center" />
 
-        <!-- Search Bar, Sort Toggle and Filter Tlačidlo -->
+		<!-- Search Bar, Sort Toggle and Filter Tlačidlo -->
         <Grid Grid.Row="1"
               Margin="20,0"
               ColumnDefinitions="*, Auto, Auto"
               ColumnSpacing="15"
               HeightRequest="45">
-
+              
             <Border Grid.Column="0"
                     Stroke="{AppThemeBinding Light=Black, Dark=White}"
                     StrokeThickness="2"
@@ -50,6 +42,7 @@
                     Padding="10,0">
                 <Entry Placeholder="Search games..."
                        Text="{Binding SearchText}"
+                       ReturnCommand="{Binding LoadGamesManuallyCommand}"
                        ClearButtonVisibility="WhileEditing"
                        VerticalOptions="Center" />
             </Border>
@@ -60,7 +53,7 @@
                     Stroke="{AppThemeBinding Light=Black, Dark=White}"
                     StrokeThickness="1"
                     Padding="12,0"
-                    WidthRequest="75"
+                    WidthRequest="50"
                     VerticalOptions="Fill">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="8" />
@@ -69,7 +62,7 @@
                     <TapGestureRecognizer Command="{Binding ToggleSortCommand}" />
                 </Border.GestureRecognizers>
                 <Label Text="{Binding SortAscending, Converter={StaticResource BoolToSortLabelConverter}}"
-                       TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}" 
                        FontSize="13" FontAttributes="Bold"
                        HorizontalOptions="Center" VerticalOptions="Center" />
             </Border>
@@ -97,80 +90,54 @@
                 <RoundRectangle CornerRadius="10" />
             </Border.StrokeShape>
 
-            <VerticalStackLayout Spacing="15">
-                <Label Text="Filter Options" FontAttributes="Bold" FontSize="16" />
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Filter Options" FontAttributes="Bold" />
 
                 <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
                     <Picker Grid.Column="0" Title="Select Genre"
                             ItemsSource="{Binding AvailableGenres}"
                             SelectedItem="{Binding SelectedGenre}" />
-
+                            
                     <Picker Grid.Column="1" Title="Select PEGI"
                             ItemsSource="{Binding AvailablePegis}"
                             SelectedItem="{Binding SelectedPegi}" />
                 </Grid>
 
-                <Button Text="Clear Filters"
-                        Command="{Binding ClearFilterCommand}"
-                        BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#2A2A2A}"
-                        TextColor="{AppThemeBinding Light=Black, Dark=White}"
-                        HorizontalOptions="End"
-                        Padding="20,8" />
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                    <Button Text="Clear"
+                            Command="{Binding ClearFilterCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                    <Button Text="Apply"
+                            Command="{Binding LoadGamesManuallyCommand}" />
+                </HorizontalStackLayout>
             </VerticalStackLayout>
         </Border>
 
-        <!-- Dlazdicovy Zoznam Hier -->
-        <CollectionView Grid.Row="3"
+		<CollectionView Grid.Row="3"
                         Margin="20,0,20,20"
                         HorizontalOptions="Fill"
                         ItemsSource="{Binding Games}">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="2"
+			<CollectionView.ItemsLayout>
+				<GridItemsLayout Orientation="Vertical" Span="2"
                                  VerticalItemSpacing="15" HorizontalItemSpacing="15" />
-            </CollectionView.ItemsLayout>
+			</CollectionView.ItemsLayout>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="bl:GameListModel">
-                    <Border Padding="0"
+			<CollectionView.ItemTemplate>
+				<DataTemplate x:DataType="bl:GameListModel">
+					<Border Padding="0"
                             Stroke="Transparent"
                             BackgroundColor="#E0E0E0"
                             HeightRequest="220">
+                            
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10" />
                         </Border.StrokeShape>
 
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer
+                            <TapGestureRecognizer 
                                 Command="{Binding Source={x:Reference LibraryPageRoot}, Path=BindingContext.GoToDetailCommand}"
                                 CommandParameter="{Binding Id}" />
                         </Border.GestureRecognizers>
 
-                        <Grid>
-                            <Image HorizontalOptions="Fill" VerticalOptions="Fill"
-                                   Aspect="AspectFill"
-                                   Source="{Binding ImageUrl, Converter={StaticResource ImageUrlConverter}}"
-                                   Opacity="0.9" />
-                            <BoxView Opacity="0.3" Color="Black" />
-                            <VerticalStackLayout VerticalOptions="End" Margin="12,10">
-                                <Label FontSize="14" LineBreakMode="WordWrap"
-                                       Text="{Binding Name}"
-                                       TextColor="White" FontAttributes="Bold" />
-                                <Label FontSize="10"
-                                       Text="{Binding Genre}"
-                                       TextColor="LightGray" />
-                            </VerticalStackLayout>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-
-            <CollectionView.EmptyView>
-                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
-                    <Label Text="No games found." FontSize="16" HorizontalOptions="Center" />
-                </VerticalStackLayout>
-            </CollectionView.EmptyView>
-        </CollectionView>
-
-    </Grid>
-
-</views:ContentPageBase>
+						<Grid>
