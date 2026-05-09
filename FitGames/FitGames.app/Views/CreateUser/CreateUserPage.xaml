@@ -5,7 +5,8 @@
              xmlns:vm="clr-namespace:FitGames.app.ViewModels.CreateUser"
              x:Class="FitGames.app.Views.CreateUser.CreateUserPage"
              x:DataType="vm:CreateUserViewModel"
-             Title="Create User">
+             Title="Create User"
+             Shell.FlyoutBehavior="Disabled">
     <Grid>
         <ScrollView HorizontalOptions="Center"
                     VerticalOptions="Center"

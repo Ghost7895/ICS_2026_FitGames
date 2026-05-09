@@ -22,7 +22,7 @@
         <ShellContent ContentTemplate="{DataTemplate signInViews:SignInPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Home" Icon="home_icon.png">
+    <FlyoutItem Title="Home" Icon="home_icon.png" Route="home">
         <ShellContent ContentTemplate="{DataTemplate homeViews:HomePage}" />
     </FlyoutItem>
 
