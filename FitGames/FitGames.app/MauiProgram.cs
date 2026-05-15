@@ -1,6 +1,7 @@
 using FitGames.BL;
 using FitGames.DAL;
 using FitGames.DAL.Options;
+using FitGames.DAL.Migrator;
 using FitGames.DAL.Seeds;
 using FitGames.app.ViewModels.Library;
 using FitGames.app.ViewModels.Game;
@@ -77,8 +78,11 @@ namespace FitGames.app
 
             var app = builder.Build();
 
-            // Run seeder
+            // Migrate and seed
+            app.Services.GetRequiredService<IDbMigrator>().Migrate();
             app.Services.GetRequiredService<IDbSeeder>().Seed();
+            
+            
 
             return app;
         }
