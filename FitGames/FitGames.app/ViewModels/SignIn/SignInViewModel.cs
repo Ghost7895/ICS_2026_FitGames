@@ -11,6 +11,7 @@ public partial class SignInViewModel : ViewModelBase
 {
     private readonly IUserFacade _userFacade;
     private readonly INavigationService _navigationService;
+    private readonly IUserSessionService _sessionService;
 
     [ObservableProperty]
     public partial ObservableCollection<UserListModel> Users { get; set; } = [];
@@ -18,11 +19,13 @@ public partial class SignInViewModel : ViewModelBase
     public SignInViewModel(
         IMessengerService messengerService,
         IUserFacade userFacade,
-        INavigationService navigationService)
+        INavigationService navigationService,
+        IUserSessionService sessionService)
         : base(messengerService)
     {
         _userFacade = userFacade;
         _navigationService = navigationService;
+        _sessionService = sessionService;
     }
 
     protected override async Task LoadDataAsync()
@@ -34,6 +37,7 @@ public partial class SignInViewModel : ViewModelBase
     [RelayCommand]
     private async Task SelectUserAsync(UserListModel user)
     {
+        _sessionService.CurrentUser = user;
         await _navigationService.GoToAsync("//home");
     }
 

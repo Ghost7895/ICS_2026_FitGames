@@ -18,7 +18,8 @@ public partial class LibraryViewModel(
     IGameFacade gameFacade,
     IUserFacade userFacade,
     INavigationService navigationService,
-    IMessengerService messengerService)
+    IMessengerService messengerService,
+    IUserSessionService sessionService)
     : ViewModelBase(messengerService),
       IRecipient<LibraryGameAddMessage>,
       IRecipient<LibraryGameRemoveMessage>
@@ -96,20 +97,21 @@ public partial class LibraryViewModel(
 
     private async Task LoadTitleAsync()
     {
-        IEnumerable<UserListModel> users = await userFacade.GetPagingAsync(1, 1);
-        UserListModel? first = users.FirstOrDefault();
-        LibraryTitle = first is not null
-            ? $"{first.Username}'s Library"
+        var current = sessionService.CurrentUser;
+        LibraryTitle = current is not null
+            ? $"{current.Username}'s Library"
             : "Your Library";
     }
 
     private async Task<IEnumerable<GameListModel>> LoadGamesAsync()
     {
-        IEnumerable<LibraryListModel> libraries = await libraryFacade.GetPagingAsync(1, 50);
-        LibraryListModel? first = libraries.FirstOrDefault();
-        if (first is null) return [];
+        var currentUser = sessionService.CurrentUser;
+        if (currentUser is null) return [];
 
-        LibraryDetailModel? detail = await libraryFacade.GetAsync(first.Id);
+        var userDetail = await userFacade.GetAsync(currentUser.Id);
+        if (userDetail is null) return [];
+
+        LibraryDetailModel? detail = await libraryFacade.GetAsync(userDetail.LibraryId);
         if (detail is null) return [];
 
         HashSet<Guid> libraryGameIds = detail.Games.Select(g => g.Id).ToHashSet();
