@@ -100,6 +100,12 @@
 	  <MauiXaml Update="Views\CreateUser\CreateUserPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Profile\EditProfilePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Profile\ProfilePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\SignIn\SignInPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

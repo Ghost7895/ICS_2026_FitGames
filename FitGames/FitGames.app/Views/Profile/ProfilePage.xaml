@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:ContentPageBase 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:FitGames.app.Views"
+    xmlns:vm="clr-namespace:FitGames.app.ViewModels.Profile"
+    xmlns:conv="clr-namespace:FitGames.app.Converters"
+    x:Class="FitGames.app.Views.Profile.ProfilePage"
+    x:DataType="vm:ProfileViewModel"
+    x:Name="ProfilePageRoot"
+    Title="Profile">
+
+    <views:ContentPageBase.Resources>
+        <ResourceDictionary>
+            <conv:CountToWidthConverter x:Key="CountToWidthConverter" />
+        </ResourceDictionary>
+    </views:ContentPageBase.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <!-- Profile Header -->
+            <Label 
+                Text="Profile" 
+                FontSize="32" 
+                FontAttributes="Bold" 
+                HorizontalTextAlignment="Center"
+                Margin="0,20,0,0"/>
+
+            <!-- Profile Card with User Info and Stats -->
+            <Grid 
+                ColumnDefinitions="Auto,*"
+                ColumnSpacing="20"
+                RowSpacing="15"
+                Padding="15"
+                RowDefinitions="Auto,Auto,Auto,Auto">
+
+                <!-- Profile Avatar -->
+                <Frame 
+                    Grid.Row="0" 
+                    Grid.RowSpan="4"
+                    Grid.Column="0"
+                    CornerRadius="80"
+                    BorderColor="Gray"
+                    HasShadow="True"
+                    Padding="0"
+                    WidthRequest="160"
+                    HeightRequest="160">
+                    <Image 
+                        Source="profile_avatar.png"
+                        Aspect="AspectFill"
+                        WidthRequest="160"
+                        HeightRequest="160"/>
+                </Frame>
+
+                <!-- User Info Section -->
+                <VerticalStackLayout 
+                    Grid.Row="0" 
+                    Grid.Column="1"
+                    Spacing="5">
+                    <Label 
+                        Text="{Binding CurrentUser.Username, StringFormat='@{0}'}"
+                        FontSize="18"
+                        FontAttributes="Bold"/>
+                    <Label 
+                        Text="{Binding CurrentUser.Name, StringFormat='{0}'}"
+                        FontSize="14"
+                        Opacity="0.7"/>
+                    <Label 
+                        Text="{Binding CurrentUser.Email}"
+                        FontSize="12"
+                        Opacity="0.6"/>
+                </VerticalStackLayout>
+
+                <!-- Stats Grid -->
+                <Grid 
+                    Grid.Row="1" 
+                    Grid.Column="1"
+                    ColumnDefinitions="*,*"
+                    ColumnSpacing="10"
+                    RowSpacing="10">
+
+                    <!-- Games Count -->
+                    <Frame 
+                        Grid.Column="0"
+                        BorderColor="#3B3B3B"
+                        Padding="12"
+                        BackgroundColor="#1E1E1E"
+                        CornerRadius="8">
+                        <VerticalStackLayout Spacing="5">
+                            <Label 
+                                Text="{Binding TotalGames}"
+                                FontSize="20"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#007AFF"/>
+                            <Label 
+                                Text="Games"
+                                FontSize="12"
+                                TextColor="#FFFFFF"
+                                HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Favourite Genre -->
+                    <Frame 
+                        Grid.Column="1"
+                        BorderColor="#3B3B3B"
+                        Padding="12"
+                        BackgroundColor="#1E1E1E"
+                        CornerRadius="8">
+                        <VerticalStackLayout Spacing="5">
+                            <Label 
+                                Text="{Binding FavouriteGenre}"
+                                FontSize="12"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#FF9500"
+                                LineBreakMode="TailTruncation"/>
+                            <Label 
+                                Text="Favourite"
+                                FontSize="12"
+                                TextColor="#FFFFFF"
+                                HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <!-- Edit Button -->
+                <Button 
+                    Grid.Row="2" 
+                    Grid.Column="1"
+                    Text="Edit Profile"
+                    Command="{Binding EditProfileCommand}"
+                    BackgroundColor="#007AFF"
+                    TextColor="White"
+                    Padding="20,12"
+                    CornerRadius="8"
+                    FontAttributes="Bold"/>
+            </Grid>
+
+            <!-- Genre Statistics Section -->
+            <VerticalStackLayout Spacing="10" Margin="0,20,0,0">
+                <Label 
+                    Text="Genre Distribution" 
+                    FontSize="18" 
+                    FontAttributes="Bold"/>
+
+                <CollectionView 
+                    ItemsSource="{Binding GenreStatistics}"
+                    SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:GenreCountModel">
+                            <VerticalStackLayout Padding="0,5">
+                                <Grid ColumnDefinitions="100,*" ColumnSpacing="10">
+                                    <Label 
+                                        Grid.Column="0"
+                                        Text="{Binding Genre}"
+                                        FontSize="12"
+                                        WidthRequest="100"/>
+
+                                    <StackLayout 
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="8">
+                                        <!-- Progress Bar representing count -->
+                                        <BoxView 
+                                            CornerRadius="4"
+                                            BackgroundColor="#007AFF"
+                                            HeightRequest="20"
+                                            WidthRequest="{Binding Count, Converter={StaticResource CountToWidthConverter}}"/>
+                                        <Label 
+                                            Text="{Binding Count}"
+                                            FontSize="12"
+                                            VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- Games Count Section (from wireframe) -->
+            <Frame 
+                Margin="0,20,0,0"
+                Padding="15"
+                BorderColor="#3B3B3B"
+                BackgroundColor="#1E1E1E"
+                CornerRadius="10">
+                <HorizontalStackLayout Spacing="10">
+                    <Label 
+                        Text="⏱" 
+                        FontSize="20"/>
+                    <Label 
+                        Text="{Binding TotalGames, StringFormat='Number of games: {0}'}"
+                        FontSize="16"
+                        VerticalTextAlignment="Center"
+                        FontAttributes="Bold"
+                        TextColor="#007AFF"/>
+                </HorizontalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</views:ContentPageBase>
