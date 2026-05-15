@@ -150,6 +150,42 @@ public static class GameSeeds
         Developer = DeveloperSeeds.FourAGames
     };
 
+    public static readonly GameEntity StrongholdDe = new()
+    {
+        Id = Guid.Parse("20000000-0000-0000-0000-000000000013"),
+        Name = "Stronghold: Definitive Edition",
+        Description = "Play as medieval Lord trying to unite England.",
+        Pegi = Pegi.Pegi12,
+        Genre = Genre.Strategy,
+        ImageUrl = "https://gaming-cdn.com/images/products/14566/orig/stronghold-definitive-edition-definitive-edition-pc-game-steam-cover.jpg?v=1713953370",
+        DeveloperId = DeveloperSeeds.Firefly.Id,
+        Developer = DeveloperSeeds.Firefly
+    };
+
+    public static readonly GameEntity Warhammer3 = new()
+    {
+        Id = Guid.Parse("20000000-0000-0000-0000-000000000014"),
+        Name = "Total War: WARHAMMER III",
+        Description = "Be part of grand battle in Realm of Chaos to become a lord of all factions.",
+        Pegi = Pegi.Pegi16,
+        Genre = Genre.Strategy,
+        ImageUrl = "https://xboxwire.thesourcemediaassets.com/sites/2/2022/02/WH3_MS_TitleHeroArt_1920x1080.jpg",
+        DeveloperId = DeveloperSeeds.Creative.Id,
+        Developer = DeveloperSeeds.Creative
+    };
+
+    public static readonly GameEntity EuroTruck2 = new()
+    {
+        Id = Guid.Parse("20000000-0000-0000-0000-000000000015"),
+        Name = "Euro Truck Simulator 2",
+        Description = "Play as a trucker who delivers important cargo across Europe.",
+        Pegi = Pegi.Pegi3,
+        Genre = Genre.Simulator,
+        ImageUrl = "https://wallpapercave.com/wp/wp2578415.jpg",
+        DeveloperId = DeveloperSeeds.Scs.Id,
+        Developer = DeveloperSeeds.Scs
+    };
+
     public static DbContext SeedGames(this DbContext dbx)
     {
         dbx.Set<GameEntity>().AddRange(

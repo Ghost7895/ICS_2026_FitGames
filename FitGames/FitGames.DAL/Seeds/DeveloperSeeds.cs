@@ -65,6 +65,24 @@ public static class DeveloperSeeds
         Name = "4A Games"
     };
 
+    public static readonly DeveloperEntity Firefly = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000011"),
+        Name = "Firefly Studios"
+    };
+
+    public static readonly DeveloperEntity Creative = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000012"),
+        Name = "CREATIVE ASSEMBLY"
+    };
+
+    public static readonly DeveloperEntity Scs = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000013"),
+        Name = "SCS Software"
+    };
+
     public static DbContext SeedDevelopers(this DbContext dbx)
     {
         dbx.Set<DeveloperEntity>().AddRange(
