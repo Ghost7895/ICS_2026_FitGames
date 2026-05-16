@@ -60,7 +60,7 @@
                            VerticalOptions="Fill" />
                 </Border>
 
-                <!--"Add game" button-->
+                <!--"Add/Remove game" button-->
                 <Border Grid.Row="1"
                         BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
                         HorizontalOptions="End"
@@ -72,7 +72,7 @@
                         <RoundRectangle CornerRadius="8" />
                     </Border.StrokeShape>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                        <TapGestureRecognizer Command="{Binding HandleGameActionCommand}" />
                     </Border.GestureRecognizers>
                     <VisualStateManager.VisualStateGroups>
                         <VisualStateGroup>
@@ -85,10 +85,16 @@
                             </VisualState>
                         </VisualStateGroup>
                     </VisualStateManager.VisualStateGroups>
-                    <Label Text="Add game"
+                    <Label Text="Remove game"
                            TextColor="{AppThemeBinding Light=Black, Dark=White}"
                            FontSize="13" FontAttributes="Bold"
-                           HorizontalOptions="Center" VerticalOptions="Center" />
+                           HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsHome}" Value="True">
+                                <Setter Property="Text" Value="Add game" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
                 </Border>
 
                 <!--"Show edit settings" button-->

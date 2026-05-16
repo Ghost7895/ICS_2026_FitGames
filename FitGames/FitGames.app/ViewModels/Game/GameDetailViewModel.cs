@@ -11,9 +11,11 @@ using System.Collections.ObjectModel;
 namespace FitGames.app.ViewModels.Game;
 
 [QueryProperty(nameof(Id), nameof(Id))]
+[QueryProperty(nameof(LibraryId), "LibraryId")]
+[QueryProperty(nameof(IsHome), "IsHome")]
 public partial class GameDetailViewModel(
     IGameFacade gameFacade,
-    IDeveloperFacade developerFacade,
+    ILibraryFacade libraryFacade,
     INavigationService navigationService,
     IMessengerService messengerService)
     : ViewModelBase(messengerService),
@@ -24,6 +26,12 @@ public partial class GameDetailViewModel(
 
     [ObservableProperty]
     public partial GameDetailModel? Game { get; set; }
+
+    [ObservableProperty]
+    public partial Guid LibraryId { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsHome { get; set; }
 
     protected override async Task LoadDataAsync()
     {
@@ -43,8 +51,8 @@ public partial class GameDetailViewModel(
     [ObservableProperty] public partial string DescriptionInput { get; set; } = string.Empty;
     [ObservableProperty] public partial string DeveloperNameInput { get; set; } = string.Empty;
     [ObservableProperty] public partial string ImageUrlInput { get; set; } = string.Empty;
-    [ObservableProperty] private Genre _selectedGenre = Genre.Unknown;
-    [ObservableProperty] private Pegi _selectedPegi = Pegi.Unknown;
+    [ObservableProperty] public partial Genre SelectedGenre { get; set; } = Genre.Unknown;
+    [ObservableProperty] public partial Pegi SelectedPegi { get; set; } = Pegi.Unknown;
 
 
     public ObservableCollection<Genre> AvailableGenres { get; } = new(Enum.GetValues<Genre>().Where(g => g != Genre.Unknown));
@@ -71,18 +79,22 @@ public partial class GameDetailViewModel(
     {
         if (Game == null) return;
 
-        Game.Genre = SelectedGenre;
-        Game.Pegi = SelectedPegi;
-        Game.Name = NameInput?.Trim() ?? string.Empty;
-        Game.Description = DescriptionInput?.Trim() ?? string.Empty;
-        Game.DeveloperName = DeveloperNameInput?.Trim() ?? "unknown";
+        var updatedGame = new GameDetailModel
+        {
+            Id = Game.Id,
+            Name = NameInput?.Trim() ?? string.Empty,
+            Description = DescriptionInput?.Trim() ?? string.Empty,
+            Genre = SelectedGenre,
+            Pegi = SelectedPegi,
+            DeveloperName = DeveloperNameInput?.Trim() ?? "unknown"
+        };
 
-        if (!string.IsNullOrWhiteSpace(Game.ImageUrl))
+        if (!string.IsNullOrWhiteSpace(ImageUrlInput))
         {
             string tmpUrl = ImageUrlInput.Trim();
             if (Uri.TryCreate(tmpUrl, UriKind.Absolute, out var validatedUri))
             {
-                Game.ImageUrl = validatedUri.ToString();
+                updatedGame.ImageUrl = validatedUri.ToString();
             }
             else
             {
@@ -91,10 +103,26 @@ public partial class GameDetailViewModel(
             }
         }
 
-        Game = await gameFacade.SaveAsync(Game);
+        Game = await gameFacade.SaveAsync(updatedGame);
         WeakReferenceMessenger.Default.Send(new GameEditMessage {GameId = Game.Id});
     }
 
+    [RelayCommand]
+    private async Task HandleGameActionAsync()
+    {
+        if (IsHome)
+        {
+            await libraryFacade.AddGameToLibraryAsync(LibraryId, Id);
+            await Shell.Current.DisplayAlertAsync("Success", "Game has been added to your library.", "OK");
+            MessengerService.Send(new LibraryGameAddMessage());
+        }
+        else
+        {
+            await libraryFacade.RemoveGameFromLibraryAsync(LibraryId, Id);
+            await Shell.Current.DisplayAlertAsync("Success", "Game has been removed from your library.", "OK");
+            MessengerService.Send(new LibraryGameRemoveMessage());
+        }
+    }
     public void Receive(GameEditMessage message)
     {
         if (message.GameId == Game?.Id)

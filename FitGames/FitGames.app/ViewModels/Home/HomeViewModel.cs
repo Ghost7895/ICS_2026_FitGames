@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FitGames.app.Services;
 using FitGames.app.Services.Interfaces;
 using FitGames.app.ViewModels.Game;
+using FitGames.BL.Facades;
 using FitGames.BL.Facades.Interfaces;
 using FitGames.BL.Models;
 using FitGames.DAL.Enums;
@@ -13,6 +14,7 @@ namespace FitGames.app.ViewModels.Home;
 public partial class HomeViewModel : ViewModelBase
 {
     private readonly IGameFacade _gameFacade;
+    private readonly ILibraryFacade _libraryFacade;
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
@@ -47,11 +49,13 @@ public partial class HomeViewModel : ViewModelBase
 
     public HomeViewModel(
         IGameFacade gameFacade,
+        ILibraryFacade libraryFacade,
         INavigationService navigationService,
         IMessengerService messengerService) 
         : base(messengerService)
     {
         _gameFacade = gameFacade;
+        _libraryFacade = libraryFacade;
         _navigationService = navigationService;
     }
 
@@ -113,11 +117,19 @@ public partial class HomeViewModel : ViewModelBase
     [RelayCommand]
     private async Task GoToDetailAsync(Guid id)
     {
+        IEnumerable<LibraryListModel> libraries = await _libraryFacade.GetPagingAsync(1, 1);
+        LibraryListModel? first = libraries.FirstOrDefault();
+        if (first is null)
+        {
+            throw new ArgumentNullException(nameof(first),"Library cannot be null");
+        }
         await _navigationService.GoToAsync(
             NavigationService.GameDetailRouteRelative,
             new Dictionary<string, object?>
             {
-                [nameof(GameDetailViewModel.Id)] = id
+                [nameof(GameDetailViewModel.Id)] = id,
+                ["LibraryId"] = first.Id,
+                ["IsHome"] = true
             });
     }
 }

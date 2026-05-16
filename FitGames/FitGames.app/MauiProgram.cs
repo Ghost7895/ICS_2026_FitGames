@@ -45,6 +45,7 @@ namespace FitGames.app
             builder.Services.AddSingleton<IMessengerService, MessengerService>();
             builder.Services.AddSingleton<INavigationService, NavigationService>();
             builder.Services.AddSingleton<IAlertService, AlertService>();
+            builder.Services.AddSingleton<IUserContext, UserContext>();
 
             // Register DAL + BL
             builder.Services.AddDALServices();

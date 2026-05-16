@@ -195,7 +195,7 @@ public class GameFacadeTests : DbContextTestsBase
         var facade = CreateGameFacade();
 
         // Act
-        var result = await facade.FilterGamesByNameAsync("Min");
+        var result = await facade.FilterGamesAsync("Min", null, null);
 
         // Assert
         Assert.NotNull(result);
@@ -211,8 +211,8 @@ public class GameFacadeTests : DbContextTestsBase
         var facade = CreateGameFacade();
 
         // Act
-        var resultExactCase = await facade.FilterGamesByNameAsync("Minecraft");
-        var resultDifferentCase = await facade.FilterGamesByNameAsync("minecraft");
+        var resultExactCase = await facade.FilterGamesAsync("Minecraft", null, null);
+        var resultDifferentCase = await facade.FilterGamesAsync("minecraft", null, null);
 
         // Assert
         Assert.NotNull(resultExactCase);
@@ -228,7 +228,7 @@ public class GameFacadeTests : DbContextTestsBase
         var facade = CreateGameFacade();
 
         // Act
-        var result = await facade.FilterGamesByNameAsync("NonExistent");
+        var result = await facade.FilterGamesAsync("NonExistent", null, null);
 
         // Assert
         Assert.NotNull(result);
@@ -245,7 +245,7 @@ public class GameFacadeTests : DbContextTestsBase
         var facade = CreateGameFacade();
 
         // Act
-        var result = await facade.FilterGamesByGenreAsync(Genre.Sandbox);
+        var result = await facade.FilterGamesAsync(null, Genre.Sandbox, null);
 
         // Assert
         Assert.NotNull(result);
@@ -261,7 +261,7 @@ public class GameFacadeTests : DbContextTestsBase
         var facade = CreateGameFacade();
 
         // Act
-        var result = await facade.FilterGamesByGenreAsync(Genre.Horror);
+        var result = await facade.FilterGamesAsync(null, Genre.Horror, null);
 
         // Assert
         Assert.NotNull(result);
@@ -279,8 +279,8 @@ public class GameFacadeTests : DbContextTestsBase
         var facade = CreateGameFacade();
 
         // Act
-        var actionGames = await facade.FilterGamesByGenreAsync(Genre.Action);
-        var strategyGames = await facade.FilterGamesByGenreAsync(Genre.Strategy);
+        var actionGames = await facade.FilterGamesAsync(null, Genre.Action, null);
+        var strategyGames = await facade.FilterGamesAsync(null, Genre.Strategy, null);
 
         // Assert
         Assert.Equal(2, actionGames.Count());
