@@ -27,7 +27,7 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
             DeveloperSeeds.Naughty, DeveloperSeeds.Mojang, DeveloperSeeds.Arkane,
             DeveloperSeeds.Capcom, DeveloperSeeds.Fumi, DeveloperSeeds.FromSoft,
             DeveloperSeeds.FourAGames, DeveloperSeeds.Firefly, DeveloperSeeds.Creative,
-            DeveloperSeeds.Scs
+            DeveloperSeeds.Scs, DeveloperSeeds.Unknown
         })
         {
             if (!dbContext.Set<DeveloperEntity>().Any(d => d.Id == developer.Id))

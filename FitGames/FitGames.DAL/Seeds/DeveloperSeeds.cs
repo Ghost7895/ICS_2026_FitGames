@@ -83,6 +83,12 @@ public static class DeveloperSeeds
         Name = "SCS Software"
     };
 
+    public static readonly DeveloperEntity Unknown = new()
+    {
+        Id = Guid.Parse("10000000-0000-0000-0000-000000000014"),
+        Name = "Unknown"
+    };
+
     public static DbContext SeedDevelopers(this DbContext dbx)
     {
         dbx.Set<DeveloperEntity>().AddRange(

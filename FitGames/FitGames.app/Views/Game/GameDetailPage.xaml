@@ -14,11 +14,37 @@
 
     <Grid RowDefinitions="Auto, *" RowSpacing="20" Padding="20">
 
-        <Button Grid.Row="0"
-                Text="Back"
-                HorizontalOptions="Start"
-                CornerRadius="5"
-                Command="{Binding GoBackCommand}" />
+        <Border Grid.Row="0"
+        BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#1a1a1a}"
+        Stroke="{AppThemeBinding Light=Black, Dark=White}"
+        HorizontalOptions="Start"
+        StrokeThickness="1"
+        Padding="12,0"
+        WidthRequest="75"
+        HeightRequest="50"
+        VerticalOptions="Fill">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="8" />
+            </Border.StrokeShape>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+            </Border.GestureRecognizers>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup>
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#D0D0D0, Dark=#2a2a2a}" />
+                            <Setter Property="Scale" Value="1.05" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Label Text="Back"
+           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+           FontSize="13" FontAttributes="Bold"
+           HorizontalOptions="Center" VerticalOptions="Center" />
+        </Border>
 
         <ScrollView Grid.Row="1">
             <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto"  RowSpacing="10">
@@ -32,13 +58,183 @@
                            Aspect="AspectFill"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
-                    
                 </Border>
 
-                <Button Grid.Row="1"
+                <!--"Add game" button-->
+                <Border Grid.Row="1"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
                         HorizontalOptions="End"
-                        Text="Launch game"
-                        FontSize="14"/>
+                        Stroke="Transparent"
+                        Margin="0,0,5,0"
+                        Padding="10"
+                        VerticalOptions="Fill">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.1" />
+                                    <Setter Property="Opacity" Value="0.85" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label Text="Add game"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                           FontSize="13" FontAttributes="Bold"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+
+                <!--"Show edit settings" button-->
+                <Border Grid.Row="1"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                        HorizontalOptions="Start"
+                        Stroke="Transparent"
+                        Margin="5,0,0,0"
+                        Padding="10"
+                        VerticalOptions="Fill">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleUpdateCommand}" />
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.1" />
+                                    <Setter Property="Opacity" Value="0.85" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label Text="Show edit settings"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                           FontSize="13" FontAttributes="Bold"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+
+                <VerticalStackLayout IsVisible="{Binding IsUpdateVisible}" 
+                     BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2C2C2C}" 
+                     Padding="15"
+                     Spacing="10"
+                     Margin="0,10">
+
+                    <Label Text="Edit Game Information" FontAttributes="Bold" FontSize="16" HorizontalOptions="Center" />
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Game Name:" FontSize="12" />
+                        <Entry Text="{Binding NameInput, Mode=TwoWay}"
+                               Placeholder="Enter game title..." />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Description:" FontSize="12" />
+                        <Entry Text="{Binding DescriptionInput, Mode=TwoWay}"
+                               Placeholder="Enter game description..." />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Developer Name:" FontSize="12" />
+                        <Entry Text="{Binding DeveloperNameInput, Mode=TwoWay}"
+                               Placeholder="Enter developer company..." />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Cover Image URL:" FontSize="12" />
+                        <Entry Text="{Binding ImageUrlInput, Mode=TwoWay}" 
+                            Placeholder="https://example.com/image.png" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Select Genre:" FontSize="12" />
+                        <Picker ItemsSource="{Binding AvailableGenres}" 
+                            SelectedItem="{Binding SelectedGenre}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Select PEGI Rating:" FontSize="12" />
+                        <Picker ItemsSource="{Binding AvailablePegis}" 
+                            SelectedItem="{Binding SelectedPegi}" />
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Border Grid.Column="0"
+                                BackgroundColor="Grey"
+                                WidthRequest="350"
+                                Stroke="Black"
+                                Padding="10"
+                                VerticalOptions="Fill">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleUpdateCommand}" />
+                            </Border.GestureRecognizers>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Property="Scale" Value="1.1" />
+                                            <Setter Property="Opacity" Value="0.85" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Label Text="Cancel"
+                                   TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                   FontSize="13" FontAttributes="Bold"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <!--<Button Grid.Column="0" 
+                                Text="Cancel" 
+                                BackgroundColor="Transparent"
+                                TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                Command="{Binding ToggleUpdateCommand}" />-->
+
+                        <Border Grid.Column="1" 
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                Stroke="Transparent"
+                                WidthRequest="350"
+                                Padding="10"
+                                VerticalOptions="Fill">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EditDetailViewGameCommand}" />
+                            </Border.GestureRecognizers>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Property="Scale" Value="1.1" />
+                                            <Setter Property="Opacity" Value="0.85" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Label Text="Save Changes"
+                                   TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                   FontSize="13" FontAttributes="Bold"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+
+                        <!--<Button Grid.Column="1" 
+                                Text="Save Changes"
+                                Command="{Binding EditDetailViewGameCommand}" />-->
+                    </Grid>
+                </VerticalStackLayout>
 
                 <Label Grid.Row="2"
                        Text="{Binding Game.Name}"
@@ -60,17 +256,20 @@
                        HorizontalOptions="Center"
                        LineBreakMode="WordWrap" />
 
-                <Label Text="{Binding Game.Genre, StringFormat='Genre: {0}'}" 
-                           Grid.Row="5"
-                           HorizontalTextAlignment="Start" 
-                           HorizontalOptions="Start"
+                <VerticalStackLayout Grid.Row="5" Spacing="5" VerticalOptions="Center" HorizontalOptions="Start">
+                    <Label Text="Genre:" 
                            FontSize="14" />
+
+                    <Label Text="{Binding Game.Genre}"
+                           FontSize="18" />
+                </VerticalStackLayout>
 
 
                 <Image Source="{Binding Game.Pegi, Converter={StaticResource PegiConverter}, TargetNullValue=''}"
+                       Grid.Row="5"
                        WidthRequest="75" HeightRequest="75"  
                        Aspect="AspectFit"
-                       Grid.Row="5"
+                       VerticalOptions="Center"
                        HorizontalOptions="End" />
 
 
