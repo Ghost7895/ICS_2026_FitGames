@@ -52,6 +52,30 @@ public partial class ProfileViewModel : ViewModelBase
         await _navigationService.GoToAsync("editprofile");
     }
 
+    [RelayCommand]
+    private async Task DeleteProfileAsync()
+    {
+        if (CurrentUser is null)
+        {
+            return;
+        }
+
+        bool confirmed = await Application.Current!.MainPage!.DisplayAlert(
+            "Delete Profile",
+            $"Are you sure you want to delete the account '{CurrentUser.Username}'? This cannot be undone.",
+            "Delete",
+            "Cancel");
+
+        if (!confirmed)
+        {
+            return;
+        }
+
+        await _userFacade.DeleteAsync(CurrentUser.Id);
+        _userSessionService.CurrentUser = null;
+        await _navigationService.GoToAsync("signin");
+    }
+
     protected override async Task LoadDataAsync()
     {
         try

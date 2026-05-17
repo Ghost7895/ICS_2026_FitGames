@@ -106,33 +106,73 @@
         <!-- Button Section -->
         <VerticalStackLayout Spacing="10" Margin="0,20,0,0">
             <!-- Save Button -->
-            <Button 
-                Text="Save Changes"
-                Command="{Binding SaveProfileCommand}"
-                BackgroundColor="#007AFF"
-                TextColor="White"
-                Padding="15,15"
-                CornerRadius="8"
-                FontAttributes="Bold"
-                FontSize="16"/>
+            <Border
+                BackgroundColor="{StaticResource Primary}"
+                Stroke="Transparent"
+                Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SaveProfileCommand}"/>
+                </Border.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="{StaticResource PrimaryDark}"/>
+                                <Setter Property="Scale" Value="1.02"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Label
+                    Text="Save Changes"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HorizontalTextAlignment="Center"
+                    Padding="15,15"/>
+            </Border>
 
             <!-- Cancel Button -->
-            <Button 
-                Text="Cancel"
-                Command="{Binding CancelCommand}"
+            <Border
                 BackgroundColor="#3B3B3B"
-                TextColor="White"
-                Padding="15,15"
-                CornerRadius="8"
-                FontAttributes="Bold"
-                FontSize="16"/>
+                Stroke="Transparent"
+                Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CancelCommand}"/>
+                </Border.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#555555"/>
+                                <Setter Property="Scale" Value="1.02"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Label
+                    Text="Cancel"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HorizontalTextAlignment="Center"
+                    Padding="15,15"/>
+            </Border>
         </VerticalStackLayout>
 
         <!-- Loading Indicator -->
         <ActivityIndicator 
             IsRunning="{Binding IsLoading}"
             IsVisible="{Binding IsLoading}"
-            Color="#007AFF"
+            Color="{StaticResource Primary}"
             Scale="1.5"
             Margin="0,20,0,0"/>
 

@@ -93,7 +93,7 @@
                                 FontSize="20"
                                 FontAttributes="Bold"
                                 HorizontalTextAlignment="Center"
-                                TextColor="#007AFF"/>
+                                TextColor="{StaticResource Primary}"/>
                             <Label 
                                 Text="Games"
                                 FontSize="12"
@@ -127,17 +127,39 @@
                 </Grid>
 
                 <!-- Edit Button -->
-                <Button 
-                    Grid.Row="2" 
+                <Border
+                    Grid.Row="2"
                     Grid.Column="1"
-                    Text="Edit Profile"
-                    Command="{Binding EditProfileCommand}"
-                    BackgroundColor="#007AFF"
-                    TextColor="White"
-                    Padding="20,12"
-                    CornerRadius="8"
-                    FontAttributes="Bold"/>
-            </Grid>
+                    BackgroundColor="{StaticResource Primary}"
+                    Stroke="Transparent"
+                    Padding="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding EditProfileCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal"/>
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource PrimaryDark}"/>
+                                    <Setter Property="Scale" Value="1.03"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label
+                        Text="Edit Profile"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        HorizontalTextAlignment="Center"
+                        Padding="20,12"/>
+                </Border>
+
+                </Grid>
 
             <!-- Genre Statistics Section -->
             <VerticalStackLayout Spacing="10" Margin="0,20,0,0">
@@ -166,7 +188,7 @@
                                         <!-- Progress Bar representing count -->
                                         <BoxView 
                                             CornerRadius="4"
-                                            BackgroundColor="#007AFF"
+                                            BackgroundColor="{StaticResource Primary}"
                                             HeightRequest="20"
                                             WidthRequest="{Binding Count, Converter={StaticResource CountToWidthConverter}}"/>
                                         <Label 
@@ -197,9 +219,41 @@
                         FontSize="16"
                         VerticalTextAlignment="Center"
                         FontAttributes="Bold"
-                        TextColor="#007AFF"/>
+                        TextColor="{StaticResource Primary}"/>
                 </HorizontalStackLayout>
             </Frame>
+
+            <!-- Danger Zone - Delete Profile -->
+            <Border
+                Margin="0,10,0,20"
+                BackgroundColor="#C0392B"
+                Stroke="Transparent"
+                Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DeleteProfileCommand}"/>
+                </Border.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#96281B"/>
+                                <Setter Property="Scale" Value="1.02"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Label
+                    Text="Delete Profile"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HorizontalTextAlignment="Center"
+                    Padding="20,14"/>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

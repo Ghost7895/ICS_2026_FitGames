@@ -10,6 +10,7 @@ public partial class EditProfileViewModel : ViewModelBase
 {
     private readonly IUserFacade _userFacade;
     private readonly INavigationService _navigationService;
+    private readonly IUserSessionService _userSessionService;
     private UserDetailModel? _originalUser;
 
     [ObservableProperty]
@@ -30,11 +31,13 @@ public partial class EditProfileViewModel : ViewModelBase
     public EditProfileViewModel(
         IUserFacade userFacade,
         INavigationService navigationService,
-        IMessengerService messengerService)
+        IMessengerService messengerService,
+        IUserSessionService userSessionService)
         : base(messengerService)
     {
         _userFacade = userFacade;
         _navigationService = navigationService;
+        _userSessionService = userSessionService;
     }
 
     protected override async Task LoadDataAsync()
@@ -43,16 +46,13 @@ public partial class EditProfileViewModel : ViewModelBase
         {
             IsLoading = true;
 
-            // Get current user
-            var allUsers = await _userFacade.GetPagingAsync(1, 1);
-            var user = allUsers.FirstOrDefault();
-
-            if (user is null)
+            var currentUserId = _userSessionService.CurrentUser?.Id;
+            if (currentUserId is null)
             {
                 return;
             }
 
-            _originalUser = await _userFacade.GetAsync(user.Id);
+            _originalUser = await _userFacade.GetAsync(currentUserId.Value);
 
             if (_originalUser is null)
             {
