@@ -13,6 +13,7 @@ public partial class ProfileViewModel : ViewModelBase
     private readonly IUserFacade _userFacade;
     private readonly ILibraryFacade _libraryFacade;
     private readonly INavigationService _navigationService;
+    private readonly IUserSessionService _userSessionService;
 
     [ObservableProperty]
     public partial UserDetailModel? CurrentUser { get; set; }
@@ -30,12 +31,14 @@ public partial class ProfileViewModel : ViewModelBase
         IUserFacade userFacade,
         ILibraryFacade libraryFacade,
         INavigationService navigationService,
-        IMessengerService messengerService)
+        IMessengerService messengerService,
+        IUserSessionService userSessionService)
         : base(messengerService)
     {
         _userFacade = userFacade;
         _libraryFacade = libraryFacade;
         _navigationService = navigationService;
+        _userSessionService = userSessionService;
     }
 
     [RelayCommand]
@@ -53,17 +56,13 @@ public partial class ProfileViewModel : ViewModelBase
     {
         try
         {
-            // Get current user - in a real app, you'd have the current user ID stored
-            // For now, we'll get the first user (assuming single user app)
-            var allUsers = await _userFacade.GetPagingAsync(1, 1);
-            var user = allUsers.FirstOrDefault();
-
-            if (user is null)
+            var currentUserId = _userSessionService.CurrentUser?.Id;
+            if (currentUserId is null)
             {
                 return;
             }
 
-            CurrentUser = await _userFacade.GetAsync(user.Id);
+            CurrentUser = await _userFacade.GetAsync(currentUserId.Value);
 
             if (CurrentUser is null)
             {

@@ -1,6 +1,7 @@
 ﻿using FitGames.DAL.Factories;
 using FitGames.DAL.Mappers;
 using FitGames.DAL.Options;
+using FitGames.DAL.Migrator;
 using FitGames.DAL.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ public static class DALInstaller
             return new DbContextSqLiteFactory(dalOptions.DatabaseFilePath);
         });
 
+        services.AddSingleton<IDbMigrator, DbMigrator>();
         services.AddSingleton<IDbSeeder, DbSeeder>();
 
         services.AddSingleton<GameEntityMapper>();
