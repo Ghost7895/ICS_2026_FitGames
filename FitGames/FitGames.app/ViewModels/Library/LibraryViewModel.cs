@@ -116,7 +116,7 @@ public partial class LibraryViewModel(
         LibraryDetailModel? detail = await libraryFacade.GetAsync(userDetail.LibraryId);
         if (detail is null) return [];
 
-        _currentLibraryId = first.Id;
+        _currentLibraryId = userDetail.LibraryId;
         HashSet<Guid> libraryGameIds = detail.Games.Select(g => g.Id).ToHashSet();
 
         IEnumerable<GameListModel> result = await gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);

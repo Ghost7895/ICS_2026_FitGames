@@ -39,9 +39,9 @@ public class Repository<TEntity>(
         return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<TEntity?> GetByIdAsync(Guid id, IEnumerable<string>? includePaths = null, CancellationToken cancellationToken = default)
+    public async Task<TEntity?> GetByIdAsync(Guid id, IEnumerable<string>? includePaths = null, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
-        IQueryable<TEntity> query = _dbSet.AsNoTracking();
+        IQueryable<TEntity> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
         if (includePaths is not null)
         {
             foreach (string path in includePaths)
