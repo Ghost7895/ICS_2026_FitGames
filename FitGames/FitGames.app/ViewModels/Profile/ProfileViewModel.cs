@@ -73,7 +73,7 @@ public partial class ProfileViewModel : ViewModelBase
 
         await _userFacade.DeleteAsync(CurrentUser.Id);
         _userSessionService.CurrentUser = null;
-        await _navigationService.GoToAsync("signin");
+        await _navigationService.GoToAsync("//signin");
     }
 
     protected override async Task LoadDataAsync()
