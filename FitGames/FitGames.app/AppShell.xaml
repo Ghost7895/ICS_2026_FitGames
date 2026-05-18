@@ -7,6 +7,7 @@
     xmlns:views="clr-namespace:FitGames.app.Views.Library"
     xmlns:homeViews="clr-namespace:FitGames.app.Views.Home"
     xmlns:signInViews="clr-namespace:FitGames.app.Views.SignIn"
+    xmlns:profileViews="clr-namespace:FitGames.app.Views.Profile"
     x:Name="AppShellRoot"
     FlyoutBehavior="Locked"
     Title="FitGames">
@@ -27,7 +28,7 @@
     </FlyoutItem>
 
     <FlyoutItem Title="Profile" Icon="profile_icon.png">
-        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        <ShellContent ContentTemplate="{DataTemplate profileViews:ProfilePage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Library" Icon="library_icon.png">

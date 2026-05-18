@@ -8,11 +8,13 @@ using FitGames.app.ViewModels.Game;
 using FitGames.app.ViewModels.Home;
 using FitGames.app.ViewModels.SignIn;
 using FitGames.app.ViewModels.CreateUser;
+using FitGames.app.ViewModels.Profile;
 using FitGames.app.Views.Library;
 using FitGames.app.Views.Game;
 using FitGames.app.Views.Home;
 using FitGames.app.Views.CreateUser;
 using FitGames.app.Views.SignIn;
+using FitGames.app.Views.Profile;
 using FitGames.app.Services;
 using FitGames.app.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -62,6 +64,8 @@ namespace FitGames.app
             builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<LibraryViewModel>();
             builder.Services.AddTransient<GameDetailViewModel>();
+            builder.Services.AddTransient<ProfileViewModel>();
+            builder.Services.AddTransient<EditProfileViewModel>();
 
 
             // Register Views
@@ -72,9 +76,12 @@ namespace FitGames.app
             builder.Services.AddTransient<CreateUserPage>();
             builder.Services.AddTransient<LibraryPage>();
             builder.Services.AddTransient<GameDetailPage>();
+            builder.Services.AddTransient<ProfilePage>();
+            builder.Services.AddTransient<EditProfilePage>();
 
-            // Register Shell route for GameDetailPage (pushed via GoToAsync)
+            // Register Shell routes
             Routing.RegisterRoute(NavigationService.GameDetailRouteRelative, typeof(GameDetailPage));
+            Routing.RegisterRoute("editprofile", typeof(EditProfilePage));
 
             var app = builder.Build();
 
