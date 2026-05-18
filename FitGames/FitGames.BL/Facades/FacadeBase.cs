@@ -81,13 +81,13 @@ public abstract class
         var nameProperty = model.GetType().GetProperty("Name");
         var usernameProperty = model.GetType().GetProperty("Username");
 
-        if (nameProperty != null)
-        {
-            var nameValue = nameProperty.GetValue(model) as string;
-            if (string.IsNullOrWhiteSpace(nameValue))
-                throw new InvalidOperationException("Name is required and cannot be empty or whitespace");
-        }
-        else if (usernameProperty != null)
+        //if (nameProperty != null)
+        //{
+        //    var nameValue = nameProperty.GetValue(model) as string;
+        //    if (string.IsNullOrWhiteSpace(nameValue))
+        //        throw new InvalidOperationException("Name is required and cannot be empty or whitespace");
+        //}
+        if (usernameProperty != null)
         {
             var usernameValue = usernameProperty.GetValue(model) as string;
             if (string.IsNullOrWhiteSpace(usernameValue))

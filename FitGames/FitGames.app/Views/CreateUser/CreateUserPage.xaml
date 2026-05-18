@@ -5,8 +5,8 @@
              xmlns:vm="clr-namespace:FitGames.app.ViewModels.CreateUser"
              x:Class="FitGames.app.Views.CreateUser.CreateUserPage"
              x:DataType="vm:CreateUserViewModel"
-             Title="Create User"
-             Shell.FlyoutBehavior="Disabled">
+             Shell.FlyoutBehavior="Disabled"
+             Shell.NavBarIsVisible="False">
     <Grid>
         <ScrollView HorizontalOptions="Center"
                     VerticalOptions="Center"
@@ -16,7 +16,7 @@
 
                 <Label Text="New Account"
                        Style="{StaticResource Headline}"
-                       FontAttributes="Bold,Italic"
+                       FontAttributes="Bold"
                        HorizontalOptions="Center" />
 
                 <BoxView HeightRequest="1"
@@ -45,12 +45,58 @@
                        Text="{Binding PhoneNumber}"
                        Keyboard="Telephone" />
 
-                <Button Text="Create Account"
-                        Margin="0,16,0,0"
-                        Command="{Binding CreateUserCommand}" />
+                <Border BackgroundColor="{StaticResource Primary}"
+                        Stroke="Transparent"
+                        Padding="16,12"
+                        Margin="0,16,0,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="4" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CreateUserCommand}" />
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.03" />
+                                    <Setter Property="Opacity" Value="0.85" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label Text="Create Account"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource White}"
+                           FontAttributes="Bold" />
+                </Border>
 
-                <Button Text="Cancel"
-                        Command="{Binding CancelCommand}" />
+                <Border BackgroundColor="{StaticResource Primary}"
+                        Stroke="Transparent"
+                        Padding="16,12">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="4" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CancelCommand}" />
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.03" />
+                                    <Setter Property="Opacity" Value="0.85" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label Text="Cancel"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource White}"
+                           FontAttributes="Bold" />
+                </Border>
 
             </VerticalStackLayout>
         </ScrollView>

@@ -60,6 +60,17 @@
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SignInViewModel}}, Path=SelectUserCommand}"
                                             CommandParameter="{Binding .}" />
                                     </Border.GestureRecognizers>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup>
+                                            <VisualState x:Name="Normal" />
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Scale" Value="1.05" />
+                                                    <Setter Property="BackgroundColor" Value="{StaticResource Gray300}" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
                                     <Image Source="user.png" Aspect="AspectFit" Opacity="0.4" />
                                 </Border>
                                 <Label Text="{Binding Username}"
@@ -70,14 +81,36 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <!-- Button -->
-                <Button Text="+"
-                        FontSize="32"
+                <!-- Add user button -->
+                <Border BackgroundColor="{StaticResource Primary}"
+                        Stroke="Transparent"
                         WidthRequest="60"
                         HeightRequest="60"
                         VerticalOptions="Start"
-                        Margin="0,30,0,0"
-                        Command="{Binding AddUserCommand}" />
+                        Margin="0,30,0,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddUserCommand}" />
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.1" />
+                                    <Setter Property="Opacity" Value="0.85" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label Text="+"
+                           FontSize="32"
+                           TextColor="{StaticResource White}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
             </HorizontalStackLayout>
 
         </VerticalStackLayout>
