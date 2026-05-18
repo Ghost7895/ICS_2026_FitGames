@@ -12,7 +12,7 @@ public interface IRepository<TEntity>
         int? skip = null,
         int? take = null,
         CancellationToken cancellationToken = default);
-    Task<TEntity?> GetByIdAsync(Guid id, IEnumerable<string>? includePaths = null, CancellationToken cancellationToken = default);
+    Task<TEntity?> GetByIdAsync(Guid id, IEnumerable<string>? includePaths = null, bool trackChanges = false, CancellationToken cancellationToken = default);
     ValueTask<bool> ExistAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);

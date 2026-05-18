@@ -11,7 +11,7 @@ namespace FitGames.DAL.Entities
         public required Genre Genre { get; set; }
         public string? ImageUrl { get; set; }
         public Guid DeveloperId { get; set; }
-        public required DeveloperEntity Developer { get; init; }
+        public required DeveloperEntity Developer { get; set; }
         public ICollection<LibraryEntity> Libraries { get; init; } = new List<LibraryEntity>();
         public ICollection<LibraryGameEntity> LibraryGames { get; init; } = new List<LibraryGameEntity>();
     }

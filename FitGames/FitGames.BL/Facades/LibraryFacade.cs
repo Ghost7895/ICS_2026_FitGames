@@ -21,12 +21,12 @@ public class LibraryFacade(
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
 
         var libraryRepo = uow.GetRepository<LibraryEntity, LibraryEntityMapper>();
-        var library = await libraryRepo.GetByIdAsync(libraryId, new[] { nameof(LibraryEntity.Games) });
+        var library = await libraryRepo.GetByIdAsync(libraryId, new[] { nameof(LibraryEntity.Games) }, true);
 
         if (library == null) throw new InvalidOperationException("Library not found.");
 
         var gameRepo = uow.GetRepository<GameEntity, GameEntityMapper>();
-        var game = await gameRepo.GetByIdAsync(gameId);
+        var game = await gameRepo.GetByIdAsync(gameId, null, true);
 
         if (game == null) throw new InvalidOperationException("Game not found.");
 
@@ -44,7 +44,7 @@ public class LibraryFacade(
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
 
         var libraryRepo = uow.GetRepository<LibraryEntity, LibraryEntityMapper>();
-        var library = await libraryRepo.GetByIdAsync(libraryId, new[] { nameof(LibraryEntity.Games) });
+        var library = await libraryRepo.GetByIdAsync(libraryId, new[] { nameof(LibraryEntity.Games) }, true);
 
         if (library == null) throw new InvalidOperationException("Library not found.");
 

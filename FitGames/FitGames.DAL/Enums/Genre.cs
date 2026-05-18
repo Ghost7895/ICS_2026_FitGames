@@ -10,6 +10,6 @@ public enum Genre
     Puzzle,
     RolePlaying,
     Sandbox,
-    Simulation,
+    Simulator,
     Strategy
 }

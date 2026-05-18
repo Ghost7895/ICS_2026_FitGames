@@ -21,7 +21,10 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
         foreach (var developer in new[]
         {
             DeveloperSeeds.Valve, DeveloperSeeds.CDProjekt, DeveloperSeeds.Rockstar,
-            DeveloperSeeds.Naughty, DeveloperSeeds.Mojang,
+            DeveloperSeeds.Naughty, DeveloperSeeds.Mojang, DeveloperSeeds.Arkane,
+            DeveloperSeeds.Capcom, DeveloperSeeds.Fumi, DeveloperSeeds.FromSoft,
+            DeveloperSeeds.FourAGames, DeveloperSeeds.Firefly, DeveloperSeeds.Creative,
+            DeveloperSeeds.Scs, DeveloperSeeds.Unknown
         })
         {
             if (!dbContext.Set<DeveloperEntity>().Any(d => d.Id == developer.Id))
@@ -33,6 +36,9 @@ public class DbSeeder(IDbContextFactory<FitGamesDbContext> dbContextFactory, IOp
         {
             GameSeeds.CS2, GameSeeds.Witcher3, GameSeeds.GTA5,
             GameSeeds.LastOfUs, GameSeeds.Minecraft, GameSeeds.Portal2,
+            GameSeeds.Prey, GameSeeds.REVillage, GameSeeds.MousePI,
+            GameSeeds.RDR2, GameSeeds.DarkSouls3, GameSeeds.MetroExodus,
+            GameSeeds.StrongholdDe, GameSeeds.Warhammer3, GameSeeds.EuroTruck2
         })
         {
             if (!dbContext.Set<GameEntity>().Any(g => g.Id == game.Id))

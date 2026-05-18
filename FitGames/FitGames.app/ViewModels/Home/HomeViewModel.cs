@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FitGames.app.Services;
 using FitGames.app.Services.Interfaces;
 using FitGames.app.ViewModels.Game;
+using FitGames.BL.Facades;
 using FitGames.BL.Facades.Interfaces;
 using FitGames.BL.Models;
 using FitGames.DAL.Enums;
@@ -13,6 +14,8 @@ namespace FitGames.app.ViewModels.Home;
 public partial class HomeViewModel : ViewModelBase
 {
     private readonly IGameFacade _gameFacade;
+    private readonly IUserSessionService _sessionService;
+    private readonly IUserFacade _userFacade;
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
@@ -47,11 +50,15 @@ public partial class HomeViewModel : ViewModelBase
 
     public HomeViewModel(
         IGameFacade gameFacade,
+        IUserFacade userFacade,
         INavigationService navigationService,
-        IMessengerService messengerService) 
+        IMessengerService messengerService,
+        IUserSessionService sessionService) 
         : base(messengerService)
     {
         _gameFacade = gameFacade;
+        _userFacade = userFacade;
+        _sessionService = sessionService;
         _navigationService = navigationService;
     }
 
@@ -112,11 +119,19 @@ public partial class HomeViewModel : ViewModelBase
     [RelayCommand]
     private async Task GoToDetailAsync(Guid id)
     {
+        var currentUser = _sessionService.CurrentUser;
+        if (currentUser is null) throw new ArgumentNullException(nameof(currentUser), "currentUser cannot be null");
+
+        var userDetail = await _userFacade.GetAsync(currentUser.Id);
+        if (userDetail is null) throw new ArgumentNullException(nameof(userDetail), "userDetail cannot be null");
+
         await _navigationService.GoToAsync(
             NavigationService.GameDetailRouteRelative,
             new Dictionary<string, object?>
             {
-                [nameof(GameDetailViewModel.Id)] = id
+                [nameof(GameDetailViewModel.Id)] = id,
+                ["LibraryId"] = userDetail.LibraryId,
+                ["IsHome"] = true
             });
     }
 }

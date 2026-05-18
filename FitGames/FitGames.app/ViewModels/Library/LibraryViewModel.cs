@@ -24,6 +24,8 @@ public partial class LibraryViewModel(
       IRecipient<LibraryGameAddMessage>,
       IRecipient<LibraryGameRemoveMessage>
 {
+    private Guid? _currentLibraryId;
+
     [ObservableProperty]
     public partial IEnumerable<GameListModel> Games { get; set; } = [];
 
@@ -114,6 +116,7 @@ public partial class LibraryViewModel(
         LibraryDetailModel? detail = await libraryFacade.GetAsync(userDetail.LibraryId);
         if (detail is null) return [];
 
+        _currentLibraryId = userDetail.LibraryId;
         HashSet<Guid> libraryGameIds = detail.Games.Select(g => g.Id).ToHashSet();
 
         IEnumerable<GameListModel> result = await gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);
@@ -123,12 +126,16 @@ public partial class LibraryViewModel(
 
     [RelayCommand]
     private async Task GoToDetailAsync(Guid id)
-        => await navigationService.GoToAsync(
+    {
+        await navigationService.GoToAsync(
             NavigationService.GameDetailRouteRelative,
             new Dictionary<string, object?>
             {
-                [nameof(GameDetailViewModel.Id)] = id
+                [nameof(GameDetailViewModel.Id)] = id,
+                ["LibraryId"] = _currentLibraryId,
+                ["IsHome"] = false
             });
+    }
 
     public void Receive(LibraryGameAddMessage message)
         => ForceDataRefreshOnNextAppearing();
