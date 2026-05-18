@@ -34,8 +34,21 @@
         <ShellContent ContentTemplate="{DataTemplate views:LibraryPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Settings" Icon="settings_icon.png">
-        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
-    </FlyoutItem>
+    <Shell.FlyoutFooter>
+        <Grid Padding="15">
+            <Border StrokeThickness="0"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"
+                    HeightRequest="25"
+                    WidthRequest="25"
+                    Padding="5">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LogOutCommand}" />
+                </Border.GestureRecognizers>
+                <Image Source="logout.png" Aspect="AspectFit" />
+            </Border>
+        </Grid>
+    </Shell.FlyoutFooter>
 
 </Shell>

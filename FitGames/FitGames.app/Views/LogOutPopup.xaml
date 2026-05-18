@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FitGames.app.Views.LogOutPopup"
+             BackgroundColor="#80000000">
+
+    <Border BackgroundColor="Black" 
+            StrokeShape="RoundRectangle 10" 
+            StrokeThickness="0" 
+            Padding="20"
+            WidthRequest="300"
+            HorizontalOptions="Center" 
+            VerticalOptions="Center"
+            Margin="20">
+            
+        <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
+            
+            <Label Text="Do you really want to log out?" 
+                   FontSize="18" 
+                   HorizontalOptions="Center" 
+                   HorizontalTextAlignment="Center"
+                   TextColor="White" />
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                <Button Grid.Column="0"
+                        Text="Log Out" 
+                        BackgroundColor="#8B0000" 
+                        TextColor="White" 
+                        CornerRadius="5"
+                        Clicked="OnLogOutClicked">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#5C0000" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Button>
+                
+                <Button Grid.Column="1"
+                        Text="Cancel" 
+                        BackgroundColor="#555555" 
+                        TextColor="White" 
+                        CornerRadius="5"
+                        Clicked="OnCancelClicked">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#333333" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Button>
+            </Grid>
+        </VerticalStackLayout>
+    </Border>
+
+</ContentPage>
