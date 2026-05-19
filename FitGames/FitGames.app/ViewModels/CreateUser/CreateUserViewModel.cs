@@ -9,6 +9,7 @@ namespace FitGames.app.ViewModels.CreateUser;
 public partial class CreateUserViewModel : ViewModelBase
 {
     private readonly IUserFacade _userFacade;
+    private readonly ILibraryFacade _libraryFacade;
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
@@ -29,10 +30,12 @@ public partial class CreateUserViewModel : ViewModelBase
     public CreateUserViewModel(
         IMessengerService messengerService,
         IUserFacade userFacade,
+        ILibraryFacade libraryFacade,
         INavigationService navigationService)
         : base(messengerService)
     {
         _userFacade = userFacade;
+        _libraryFacade = libraryFacade;
         _navigationService = navigationService;
     }
 
@@ -46,7 +49,7 @@ public partial class CreateUserViewModel : ViewModelBase
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Email))
             return;
 
-        await _userFacade.SaveAsync(new UserDetailModel
+        var savedUser = await _userFacade.SaveAsync(new UserDetailModel
         {
             Id = Guid.Empty,
             Username = Username,
@@ -57,6 +60,7 @@ public partial class CreateUserViewModel : ViewModelBase
             LibraryId = Guid.Empty
         });
 
+        await _libraryFacade.CreateLibraryForUserAsync(savedUser.Id, savedUser.Username);
         await _navigationService.GoToAsync("..");
     }
 }

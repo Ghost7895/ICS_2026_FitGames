@@ -4,6 +4,7 @@ using FitGames.BL.Models;
 using FitGames.DAL.Entities;
 using FitGames.DAL.Mappers;
 using FitGames.DAL.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitGames.BL.Facades;
 

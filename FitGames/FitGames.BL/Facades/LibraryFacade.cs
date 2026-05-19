@@ -57,4 +57,19 @@ public class LibraryFacade(
             await uow.CommitAsync();
         }
     }
+
+    public async Task CreateLibraryForUserAsync(Guid userId, string username)
+    {
+        await using IUnitOfWork uow = UnitOfWorkFactory.Create();
+        var libraryRepo = uow.GetRepository<LibraryEntity, LibraryEntityMapper>();
+
+        await libraryRepo.InsertAsync(new LibraryEntity
+        {
+            Id = Guid.NewGuid(),
+            Name = $"{username}'s Library",
+            UserId = userId
+        });
+
+        await uow.CommitAsync();
+    }
 }

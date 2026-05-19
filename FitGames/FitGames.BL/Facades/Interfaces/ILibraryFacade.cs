@@ -7,4 +7,5 @@ public interface ILibraryFacade : IFacade<LibraryEntity, LibraryListModel, Libra
 {
     Task AddGameToLibraryAsync(Guid libraryId, Guid gameId);
     Task RemoveGameFromLibraryAsync(Guid libraryId, Guid gameId);
+    Task CreateLibraryForUserAsync(Guid userId, string username);
 }
