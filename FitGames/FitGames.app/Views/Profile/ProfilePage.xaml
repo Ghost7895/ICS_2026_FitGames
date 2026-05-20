@@ -66,13 +66,13 @@
                     Grid.RowSpan="4"
                     Grid.Column="0"
                     CornerRadius="80"
-                    BorderColor="Gray"
+                    BorderColor="white"
                     HasShadow="True"
                     Padding="0"
                     WidthRequest="160"
                     HeightRequest="160">
                     <Image 
-                        Source="profile_avatar.png"
+                        Source="user.png"
                         Aspect="AspectFill"
                         WidthRequest="160"
                         HeightRequest="160"/>
