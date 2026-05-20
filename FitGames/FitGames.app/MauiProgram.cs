@@ -3,6 +3,7 @@ using FitGames.DAL;
 using FitGames.DAL.Options;
 using FitGames.DAL.Migrator;
 using FitGames.DAL.Seeds;
+using CommunityToolkit.Maui;
 using FitGames.app.ViewModels.Library;
 using FitGames.app.ViewModels.Game;
 using FitGames.app.ViewModels.Home;
@@ -29,6 +30,7 @@ namespace FitGames.app
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

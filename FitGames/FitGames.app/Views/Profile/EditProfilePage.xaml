@@ -9,7 +9,8 @@
     x:Name="EditProfilePageRoot"
     Title="Edit Profile">
 
-    <VerticalStackLayout Spacing="20" Padding="20">
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
 
         <!-- Header -->
         <Label 
@@ -177,5 +178,6 @@
             Margin="0,20,0,0"/>
 
     </VerticalStackLayout>
+    </ScrollView>
 
 </views:ContentPageBase>

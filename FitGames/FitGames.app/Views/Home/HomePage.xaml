@@ -21,19 +21,44 @@
           RowDefinitions="Auto, Auto, Auto, *"
           RowSpacing="15">
 
-        <HorizontalStackLayout Grid.Row="0"
-                               Margin="20,20,20,0"
-                               Spacing="15"
-                               HorizontalOptions="Center">
-            <Image Source="appicon.png"
-                   WidthRequest="40"
-                   HeightRequest="40"
-                   VerticalOptions="Center" />
-            <Label Text="FitGames"
-                   FontSize="32"
-                   FontAttributes="Bold"
-                   VerticalOptions="Center" />
-        </HorizontalStackLayout>
+        <Grid Grid.Row="0"
+              Margin="20,20,20,0"
+              ColumnDefinitions="*, Auto">
+            <HorizontalStackLayout Grid.Column="0"
+                                   Spacing="15"
+                                   HorizontalOptions="Center">
+                <Image Source="appicon.png"
+                       WidthRequest="40"
+                       HeightRequest="40"
+                       VerticalOptions="Center" />
+                <Label Text="FitGames"
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <Border Grid.Column="1"
+                    BackgroundColor="Transparent"
+                    Stroke="Transparent"
+                    VerticalOptions="Center">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RefreshCommand}"/>
+                </Border.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="1.2"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Label Text="⟳"
+                       FontSize="28"
+                       TextColor="{StaticResource Primary}"
+                       Padding="8,4"/>
+            </Border>
+        </Grid>
 
         <!-- Search Bar a Filter Tlačidlo -->
         <Grid Grid.Row="1"

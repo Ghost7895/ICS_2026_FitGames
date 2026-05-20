@@ -1,9 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FitGames.app.Services.Interfaces;
 
 namespace FitGames.app.ViewModels;
 
-public abstract class ViewModelBase : ObservableRecipient
+public abstract partial class ViewModelBase : ObservableRecipient
 {
     private bool _forceDataRefresh = true;
 
@@ -30,6 +31,12 @@ public abstract class ViewModelBase : ObservableRecipient
     protected void ForceDataRefreshOnNextAppearing()
     {
         _forceDataRefresh = true;
+    }
+
+    [RelayCommand]
+    public async Task RefreshAsync()
+    {
+        await LoadDataAsync();
     }
 
     protected virtual Task LoadDataAsync()

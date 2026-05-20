@@ -20,12 +20,37 @@
         <VerticalStackLayout Spacing="20" Padding="20">
 
             <!-- Profile Header -->
-            <Label 
-                Text="Profile" 
-                FontSize="32" 
-                FontAttributes="Bold" 
-                HorizontalTextAlignment="Center"
-                Margin="0,20,0,0"/>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,20,0,0">
+                <Label
+                    Grid.Column="0"
+                    Text="Profile"
+                    FontSize="32"
+                    FontAttributes="Bold"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="Center"/>
+                <Border Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        Stroke="Transparent"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RefreshCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal"/>
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.2"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label Text="⟳"
+                           FontSize="28"
+                           TextColor="{StaticResource Primary}"
+                           Padding="8,4"/>
+                </Border>
+            </Grid>
 
             <!-- Profile Card with User Info and Stats -->
             <Grid 

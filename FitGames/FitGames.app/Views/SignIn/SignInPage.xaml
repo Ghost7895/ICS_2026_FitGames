@@ -11,20 +11,44 @@
     <Grid RowDefinitions="Auto, *, Auto" Padding="30">
 
         <!-- Header  -->
-        <VerticalStackLayout Grid.Row="0" HorizontalOptions="Center" Spacing="8">
-            <Label Text="Fitgames"
-                   Style="{StaticResource Headline}"
-                   FontAttributes="Bold" />
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="8">
+                <Label Text="Fitgames"
+                       Style="{StaticResource Headline}"
+                       FontAttributes="Bold" />
 
-            <Image Source="logo.png"
-                   WidthRequest="160"
-                   HeightRequest="160"
-                   Aspect="AspectFill">
-                <Image.Clip>
-                    <RoundRectangleGeometry Rect="0,0,160,160" CornerRadius="24" />
-                </Image.Clip>
-            </Image>
-        </VerticalStackLayout>
+                <Image Source="logo.png"
+                       WidthRequest="160"
+                       HeightRequest="160"
+                       Aspect="AspectFill">
+                    <Image.Clip>
+                        <RoundRectangleGeometry Rect="0,0,160,160" CornerRadius="24" />
+                    </Image.Clip>
+                </Image>
+            </VerticalStackLayout>
+            <Border Grid.Column="1"
+                    BackgroundColor="Transparent"
+                    Stroke="Transparent"
+                    VerticalOptions="Start">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RefreshCommand}"/>
+                </Border.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="1.2"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Label Text="⟳"
+                       FontSize="28"
+                       TextColor="{StaticResource Primary}"
+                       Padding="8,4"/>
+            </Border>
+        </Grid>
 
         <!-- Body -->
         <VerticalStackLayout Grid.Row="1" Spacing="16" VerticalOptions="Center">
