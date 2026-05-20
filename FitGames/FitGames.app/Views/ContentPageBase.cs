@@ -8,7 +8,6 @@ public abstract class ContentPageBase : ContentPage
 
     protected ContentPageBase(ViewModelBase viewModel)
     {
-        //InitializeComponent();
         BindingContext = ViewModel = viewModel;
     }
 

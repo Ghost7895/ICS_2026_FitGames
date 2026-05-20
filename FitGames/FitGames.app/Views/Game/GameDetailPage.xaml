@@ -65,7 +65,8 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
                         HorizontalOptions="End"
                         Stroke="Transparent"
-                        Margin="0,0,5,0"
+                        Margin="0,0,15,0"
+                        WidthRequest="350"
                         Padding="10"
                         VerticalOptions="Fill">
                     <Border.StrokeShape>
@@ -102,7 +103,8 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
                         HorizontalOptions="Start"
                         Stroke="Transparent"
-                        Margin="5,0,0,0"
+                        Margin="15,0,0,0"
+                        WidthRequest="350"
                         Padding="10"
                         VerticalOptions="Fill">
                     <Border.StrokeShape>

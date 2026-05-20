@@ -60,7 +60,7 @@ public partial class ProfileViewModel : ViewModelBase
             return;
         }
 
-        bool confirmed = await Application.Current!.MainPage!.DisplayAlert(
+        bool confirmed = await Application.Current!.MainPage!.DisplayAlertAsync(
             "Delete Profile",
             $"Are you sure you want to delete the account '{CurrentUser.Username}'? This cannot be undone.",
             "Delete",
@@ -127,9 +127,6 @@ public partial class ProfileViewModel : ViewModelBase
     }
 }
 
-/// <summary>
-/// Helper model for displaying genre statistics
-/// </summary>
 public class GenreCountModel
 {
     public Genre Genre { get; set; }

@@ -8,8 +8,6 @@ public class CountToWidthConverter : IValueConverter
     {
         if (value is int count)
         {
-            // Scale the width based on count (max width 200)
-            // Adjust the multiplier based on your max expected count
             return Math.Min(count * 20, 200);
         }
 
