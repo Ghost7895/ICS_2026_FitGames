@@ -93,9 +93,7 @@ public class GameFacade(
         }
 
         await gameRepository.UpdateAsync(foundGameEntity).ConfigureAwait(false);
-
         await uow.CommitAsync().ConfigureAwait(false);
-
         return ModelMapper.MapToDetailModel(foundGameEntity);
     }
 }
