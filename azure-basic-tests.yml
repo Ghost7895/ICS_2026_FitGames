@@ -16,6 +16,9 @@ steps:
     packageType: 'sdk'
     version: '10.0.x'
 
+- script: dotnet workload restore FitGames/FitGames.slnx
+  displayName: 'Install .NET Workloads'
+
 - script: dotnet restore FitGames/FitGames.slnx
   displayName: Restore dependencies
 
