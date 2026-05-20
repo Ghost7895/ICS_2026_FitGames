@@ -24,14 +24,15 @@ public class GameFacade(
         var searchName = name?.ToLower();
 
         var entities = await uow.GetRepository<GameEntity, GameEntityMapper>()
-            .GetAllAsync(filter: g => 
+            .GetAllAsync(
+            filter: g => 
                 (string.IsNullOrWhiteSpace(searchName) || g.Name.ToLower().Contains(searchName)) &&
                 (!genre.HasValue || genre.Value == Genre.Unknown || g.Genre == genre.Value) &&
-                (!pegi.HasValue || pegi.Value == Pegi.Unknown || g.Pegi == pegi.Value));
+                (!pegi.HasValue || pegi.Value == Pegi.Unknown || g.Pegi == pegi.Value),
+            orderBy: g => g.Name,
+            orderAscending: ascending);
 
-        return ascending
-            ? ModelMapper.MapToListModel(entities.OrderBy(g => g.Name))
-            : ModelMapper.MapToListModel(entities.OrderByDescending(g => g.Name));
+        return ModelMapper.MapToListModel(entities);
     }
 
     public override async Task<GameDetailModel> SaveAsync(GameDetailModel model)

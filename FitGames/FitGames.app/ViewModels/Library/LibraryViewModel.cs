@@ -113,15 +113,9 @@ public partial class LibraryViewModel(
         var userDetail = await userFacade.GetAsync(currentUser.Id);
         if (userDetail is null) return [];
 
-        LibraryDetailModel? detail = await libraryFacade.GetAsync(userDetail.LibraryId);
-        if (detail is null) return [];
-
         _currentLibraryId = userDetail.LibraryId;
-        HashSet<Guid> libraryGameIds = detail.Games.Select(g => g.Id).ToHashSet();
+        return await gameFacade.FilterGamesAsync(_searchText, _selectedGenre, _selectedPegi, _sortAscending);
 
-        IEnumerable<GameListModel> result = await gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);
-
-        return result.Where(g => libraryGameIds.Contains(g.Id));
     }
 
     [RelayCommand]

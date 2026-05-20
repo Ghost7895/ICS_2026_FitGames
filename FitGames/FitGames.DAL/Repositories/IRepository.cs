@@ -11,6 +11,8 @@ public interface IRepository<TEntity>
         IEnumerable<string>? includePaths = null,
         int? skip = null,
         int? take = null,
+        Expression<Func<TEntity, object>>? orderBy = null, 
+        bool orderAscending = true,
         CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(Guid id, IEnumerable<string>? includePaths = null, bool trackChanges = false, CancellationToken cancellationToken = default);
     ValueTask<bool> ExistAsync(TEntity entity, CancellationToken cancellationToken = default);

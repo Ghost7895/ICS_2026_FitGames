@@ -71,9 +71,7 @@ public partial class HomeViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoadGamesAsync()
     {
-        IEnumerable<GameListModel> games;
-
-        games = await _gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);
+        var games = await _gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);
 
         Games.Clear();
         foreach (var game in games)

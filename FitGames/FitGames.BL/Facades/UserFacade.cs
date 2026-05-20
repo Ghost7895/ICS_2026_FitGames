@@ -27,4 +27,41 @@ public class UserFacade(
 
         return ModelMapper.MapToDetailModel(entities.SingleOrDefault());
     }
+
+    public override async Task<UserDetailModel> SaveAsync(UserDetailModel model)
+    {
+        // 1. Ak user už existuje (má nejaké ID), použijeme klasický Save
+        if (model.Id != Guid.Empty)
+        {
+            return await base.SaveAsync(model);
+        }
+
+        // 2. Ak vytvárame nového usera, spravíme vlastnú logiku
+        await using IUnitOfWork uow = UnitOfWorkFactory.Create();
+
+        // Prevod do entity
+        UserEntity userEntity = ModelMapper.MapToEntity(model);
+        userEntity.Id = Guid.NewGuid();
+
+        // Vytvorenie dedikovanej knižnice pre tohto usera
+        LibraryEntity newLibrary = new LibraryEntity
+        {
+            Id = Guid.NewGuid(),
+            Name = $"{userEntity.Username}'s Library",
+            UserId = userEntity.Id
+        };
+
+        var userRepo = uow.GetRepository<UserEntity, UserEntityMapper>();
+        var libraryRepo = uow.GetRepository<LibraryEntity, LibraryEntityMapper>();
+
+        // Obe entity pošleme do testovacej transakcie
+        await libraryRepo.InsertAsync(newLibrary);
+        await userRepo.InsertAsync(userEntity);
+
+        // V JEDNOM momente sa obe entity uložia. Ak niečo padne, neuloží sa ani jedna.
+        await uow.CommitAsync();
+
+        // Mapovanie späť pre UI
+        return ModelMapper.MapToDetailModel(userEntity);
+    }
 }

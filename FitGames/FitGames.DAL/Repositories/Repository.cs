@@ -18,6 +18,8 @@ public class Repository<TEntity>(
         IEnumerable<string>? includePaths = null,
         int? skip = null,
         int? take = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
+        bool orderAscending = true,
         CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> query = _dbSet.AsNoTracking();
@@ -30,7 +32,9 @@ public class Repository<TEntity>(
         }
         if (filter is not null)
             query = query.Where(filter);
-        if (skip.HasValue || take.HasValue)
+        if (orderBy is not null)
+            query = orderAscending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);
+        else if (skip.HasValue || take.HasValue)
             query = query.OrderBy(e => e.Id);
         if (skip.HasValue)
             query = query.Skip(skip.Value);
