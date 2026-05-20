@@ -95,7 +95,7 @@
                                             </VisualState>
                                         </VisualStateGroup>
                                     </VisualStateManager.VisualStateGroups>
-                                    <Image Source="user.png" Aspect="AspectFit" Opacity="0.0" />
+                                    <Image Source="user.png" Aspect="AspectFit" Opacity="1.0" />
                                 </Border>
                                 <Label Text="{Binding Username}"
                                        HorizontalOptions="Center"
