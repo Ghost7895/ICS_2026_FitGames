@@ -82,11 +82,11 @@ public partial class GameDetailViewModel(
         var updatedGame = new GameDetailModel
         {
             Id = Game.Id,
-            Name = NameInput?.Trim() ?? string.Empty,
-            Description = DescriptionInput?.Trim() ?? string.Empty,
+            Name = string.IsNullOrWhiteSpace(NameInput) ? "unspecified" : NameInput.Trim(),
+            Description = string.IsNullOrWhiteSpace(DescriptionInput) ? "unspecified" : DescriptionInput.Trim(),
             Genre = SelectedGenre,
             Pegi = SelectedPegi,
-            DeveloperName = DeveloperNameInput?.Trim() ?? "unknown"
+            DeveloperName = string.IsNullOrWhiteSpace(DeveloperNameInput) ? "unspecified" : DeveloperNameInput.Trim()
         };
 
         if (!string.IsNullOrWhiteSpace(ImageUrlInput))

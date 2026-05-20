@@ -94,15 +94,15 @@ public class GameFacade(
         }
         else
         {
-            var newDev = new DeveloperEntity
+            matchedDev = new DeveloperEntity
             {
                 Id = Guid.NewGuid(),
                 Name = typedName
             };
 
-            await developerRepository.InsertAsync(newDev).ConfigureAwait(false);
+            await developerRepository.InsertAsync(matchedDev).ConfigureAwait(false);
 
-            gameEntity.DeveloperId = newDev.Id;
+            gameEntity.DeveloperId = matchedDev.Id;
             gameEntity.Developer = null!;
         }
 
@@ -116,6 +116,7 @@ public class GameFacade(
         }
 
         await uow.CommitAsync().ConfigureAwait(false);
+        gameEntity.Developer = matchedDev;
         return ModelMapper.MapToDetailModel(gameEntity);
     }
 

@@ -120,11 +120,11 @@ public partial class HomeViewModel : ViewModelBase
         var newGame = new GameDetailModel
         {
             Id = Guid.Empty,
-            Name = AddNameInput?.Trim() ?? string.Empty,
-            Description = AddDescriptionInput?.Trim() ?? string.Empty,
+            Name = string.IsNullOrWhiteSpace(AddNameInput) ? "unspecified" : AddNameInput.Trim(),
+            Description = string.IsNullOrWhiteSpace(AddDescriptionInput) ? "unspecified" : AddDescriptionInput.Trim(),
             Genre = AddSelectedGenre,
             Pegi = AddSelectedPegi,
-            DeveloperName = AddDeveloperNameInput?.Trim() ?? "unknown"
+            DeveloperName = string.IsNullOrWhiteSpace(AddDeveloperNameInput) ? "unspecified" : AddDeveloperNameInput.Trim()
         };
 
         if (!string.IsNullOrWhiteSpace(AddImageUrlInput))
