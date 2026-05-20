@@ -110,6 +110,7 @@ public partial class GameDetailViewModel(
     [RelayCommand]
     private async Task HandleGameActionAsync()
     {
+
         if (IsHome)
         {
             await libraryFacade.AddGameToLibraryAsync(LibraryId, Id);

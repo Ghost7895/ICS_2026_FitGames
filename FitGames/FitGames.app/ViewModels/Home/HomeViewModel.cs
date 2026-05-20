@@ -73,18 +73,7 @@ public partial class HomeViewModel : ViewModelBase
     {
         IEnumerable<GameListModel> games;
 
-        if (!string.IsNullOrWhiteSpace(SearchText) || (SelectedGenre.HasValue && SelectedGenre.Value != Genre.Unknown) || (SelectedPegi.HasValue && SelectedPegi.Value != Pegi.Unknown))
-        {
-            games = await _gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);
-        }
-        else
-        {
-            games = await _gameFacade.GetPagingAsync(1, 100);
-            
-            games = SortAscending
-                ? games.OrderBy(g => g.Name).ToList()
-                : games.OrderByDescending(g => g.Name).ToList();
-        }
+        games = await _gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending);
 
         Games.Clear();
         foreach (var game in games)

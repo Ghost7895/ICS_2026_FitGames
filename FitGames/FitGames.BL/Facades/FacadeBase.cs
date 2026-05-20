@@ -81,12 +81,6 @@ public abstract class
         var nameProperty = model.GetType().GetProperty("Name");
         var usernameProperty = model.GetType().GetProperty("Username");
 
-        //if (nameProperty != null)
-        //{
-        //    var nameValue = nameProperty.GetValue(model) as string;
-        //    if (string.IsNullOrWhiteSpace(nameValue))
-        //        throw new InvalidOperationException("Name is required and cannot be empty or whitespace");
-        //}
         if (usernameProperty != null)
         {
             var usernameValue = usernameProperty.GetValue(model) as string;
@@ -120,13 +114,6 @@ public abstract class
         return result;
     }
 
-    /// <summary>
-    /// This Guard ensures that there is a clear understanding of current infrastructure limitations.
-    /// This version of BL/DAL infrastructure does not support insertion or update of adjacent entities.
-    /// WARN: Does not guard navigation properties.
-    /// </summary>
-    /// <param name="model">Model to be inserted or updated</param>
-    /// <exception cref="InvalidOperationException"></exception>
     protected static void GuardCollectionsAreNotSet(TDetailModel model)
     {
         IEnumerable<PropertyInfo> collectionProperties = model
