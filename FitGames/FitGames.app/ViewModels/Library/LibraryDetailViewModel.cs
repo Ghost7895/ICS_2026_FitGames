@@ -44,20 +44,6 @@ public partial class LibraryDetailViewModel(
         }
     }
 
-    //[RelayCommand]
-    //private async Task GoToEditAsync()
-    //{
-    //    if (Library is not null)
-    //    {
-    //        await navigationService.GoToAsync(
-    //            NavigationService.LibraryEditRouteRelative,
-    //            new Dictionary<string, object?>
-    //            {
-    //                [nameof(LibraryEditViewModel.Id)] = Library.Id
-    //            });
-    //    }
-    //}
-
     public void Receive(LibraryEditMessage message)
     {
         if (message.LibraryId == Library?.Id)
