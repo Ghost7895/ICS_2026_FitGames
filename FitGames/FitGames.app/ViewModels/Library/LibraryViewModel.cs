@@ -114,7 +114,7 @@ public partial class LibraryViewModel(
         if (userDetail is null) return [];
 
         _currentLibraryId = userDetail.LibraryId;
-        return await gameFacade.FilterGamesAsync(_searchText, _selectedGenre, _selectedPegi, _sortAscending);
+        return await gameFacade.FilterGamesAsync(_searchText, _selectedGenre, _selectedPegi, _sortAscending, _currentLibraryId);
 
     }
 

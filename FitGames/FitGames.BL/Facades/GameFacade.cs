@@ -17,7 +17,7 @@ public class GameFacade(
     protected override ICollection<string> IncludesNavigationPathDetail =>
         new[] { nameof(GameEntity.Developer), nameof(GameEntity.Libraries) };
 
-    public async Task<IEnumerable<GameListModel>> FilterGamesAsync(string? name, Genre? genre, Pegi? pegi, bool ascending = true)
+    public async Task<IEnumerable<GameListModel>> FilterGamesAsync(string? name, Genre? genre, Pegi? pegi, bool ascending = true, Guid? libraryId = null)
     {
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
 
@@ -28,7 +28,8 @@ public class GameFacade(
             filter: g => 
                 (string.IsNullOrWhiteSpace(searchName) || g.Name.ToLower().Contains(searchName)) &&
                 (!genre.HasValue || genre.Value == Genre.Unknown || g.Genre == genre.Value) &&
-                (!pegi.HasValue || pegi.Value == Pegi.Unknown || g.Pegi == pegi.Value),
+                (!pegi.HasValue || pegi.Value == Pegi.Unknown || g.Pegi == pegi.Value) &&
+                (!libraryId.HasValue || g.Libraries.Any(l => l.Id == libraryId.Value)),
             orderBy: g => g.Name,
             orderAscending: ascending);
 
