@@ -69,11 +69,9 @@ namespace FitGames.app
             builder.Services.AddTransient<ProfileViewModel>();
             builder.Services.AddTransient<EditProfileViewModel>();
 
-
             // Register Views
             builder.Services.AddTransient<AppShell>();
             builder.Services.AddTransient<HomePage>();
-            builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<SignInPage>();
             builder.Services.AddTransient<CreateUserPage>();
             builder.Services.AddTransient<LibraryPage>();
@@ -90,8 +88,6 @@ namespace FitGames.app
             // Migrate and seed
             app.Services.GetRequiredService<IDbMigrator>().Migrate();
             app.Services.GetRequiredService<IDbSeeder>().Seed();
-            
-            
 
             return app;
         }
