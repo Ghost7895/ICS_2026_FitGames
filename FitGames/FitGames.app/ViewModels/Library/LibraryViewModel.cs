@@ -6,7 +6,6 @@ using FitGames.app.Messages;
 using FitGames.app.Services;
 using FitGames.app.Services.Interfaces;
 using FitGames.app.ViewModels.Game;
-using FitGames.BL.Facades;
 using FitGames.BL.Facades.Interfaces;
 using FitGames.BL.Models;
 using FitGames.DAL.Enums;
@@ -14,9 +13,7 @@ using FitGames.DAL.Enums;
 namespace FitGames.app.ViewModels.Library;
 
 public partial class LibraryViewModel(
-    ILibraryFacade libraryFacade,
     IGameFacade gameFacade,
-    IUserFacade userFacade,
     INavigationService navigationService,
     IMessengerService messengerService,
     IUserSessionService sessionService)
@@ -24,8 +21,6 @@ public partial class LibraryViewModel(
       IRecipient<LibraryGameAddMessage>,
       IRecipient<LibraryGameRemoveMessage>
 {
-    private Guid? _currentLibraryId;
-
     [ObservableProperty]
     public partial IEnumerable<GameListModel> Games { get; set; } = [];
 
@@ -107,26 +102,21 @@ public partial class LibraryViewModel(
 
     private async Task<IEnumerable<GameListModel>> LoadGamesAsync()
     {
-        var currentUser = sessionService.CurrentUser;
-        if (currentUser is null) return [];
+        if (sessionService.CurrentUser is null) return [];
 
-        var userDetail = await userFacade.GetAsync(currentUser.Id);
-        if (userDetail is null) return [];
-
-        _currentLibraryId = userDetail.LibraryId;
-        return await gameFacade.FilterGamesAsync(_searchText, _selectedGenre, _selectedPegi, _sortAscending, _currentLibraryId);
-
+        return await gameFacade.FilterGamesAsync(SearchText, SelectedGenre, SelectedPegi, SortAscending, sessionService.CurrentUser.LibraryId);
     }
 
     [RelayCommand]
     private async Task GoToDetailAsync(Guid id)
     {
+        if (sessionService.CurrentUser is null) throw new ArgumentNullException(nameof(sessionService.CurrentUser), "currentUser cannot be null");
         await navigationService.GoToAsync(
             NavigationService.GameDetailRouteRelative,
             new Dictionary<string, object?>
             {
                 [nameof(GameDetailViewModel.Id)] = id,
-                ["LibraryId"] = _currentLibraryId,
+                ["LibraryId"] = sessionService.CurrentUser.LibraryId,
                 ["IsHome"] = false
             });
     }

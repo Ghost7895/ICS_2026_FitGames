@@ -363,3 +363,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/FitGames/FitGames.DAL/FitGames.db
+/FitGames/FitGames.app/FitGames.app.csproj.lscache

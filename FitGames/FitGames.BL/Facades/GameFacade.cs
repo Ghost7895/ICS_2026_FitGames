@@ -51,18 +51,32 @@ public class GameFacade(
         var developerRepository = uow.GetRepository<DeveloperEntity, DeveloperEntityMapper>();
         var gameRepository = uow.GetRepository<GameEntity, GameEntityMapper>();
 
-        var foundGameEntity = await gameRepository.GetByIdAsync(model.Id).ConfigureAwait(false);
+        GameEntity? gameEntity = null;
+        bool newGameDetected = model.Id == Guid.Empty;
 
-        if (foundGameEntity == null)
+        if (!newGameDetected)
         {
-            throw new InvalidOperationException($"Game with ID {model.Id} not found.");
+            gameEntity = await gameRepository.GetByIdAsync(model.Id).ConfigureAwait(false);
         }
 
-        foundGameEntity.Name = model.Name;
-        foundGameEntity.Description = model.Description;
-        foundGameEntity.ImageUrl = model.ImageUrl;
-        foundGameEntity.Genre = model.Genre;
-        foundGameEntity.Pegi = model.Pegi;
+        if (gameEntity == null)
+        {
+            newGameDetected = true;
+            gameEntity = new GameEntity()
+            {
+                Id = model.Id == Guid.Empty ? Guid.NewGuid() : model.Id,
+                Name = string.Empty,
+                Description = string.Empty,
+                Pegi = Pegi.Unknown,
+                Genre = Genre.Unknown
+            };
+        }
+
+        gameEntity.Name = model.Name;
+        gameEntity.Description = model.Description;
+        gameEntity.ImageUrl = model.ImageUrl;
+        gameEntity.Genre = model.Genre;
+        gameEntity.Pegi = model.Pegi;
 
         string typedName = model.DeveloperName?.Trim() ?? "Unknown";
 
@@ -75,8 +89,8 @@ public class GameFacade(
 
         if (matchedDev != null)
         {
-            foundGameEntity.DeveloperId = matchedDev.Id;
-            foundGameEntity.Developer = matchedDev;
+            gameEntity.DeveloperId = matchedDev.Id;
+            gameEntity.Developer = null!;
         }
         else
         {
@@ -88,12 +102,40 @@ public class GameFacade(
 
             await developerRepository.InsertAsync(newDev).ConfigureAwait(false);
 
-            foundGameEntity.DeveloperId = newDev.Id;
-            foundGameEntity.Developer = newDev;
+            gameEntity.DeveloperId = newDev.Id;
+            gameEntity.Developer = null!;
         }
 
-        await gameRepository.UpdateAsync(foundGameEntity).ConfigureAwait(false);
+        if (newGameDetected)
+        {
+            await gameRepository.InsertAsync(gameEntity).ConfigureAwait(false);
+        }
+        else
+        {
+            await gameRepository.UpdateAsync(gameEntity).ConfigureAwait(false);
+        }
+
         await uow.CommitAsync().ConfigureAwait(false);
-        return ModelMapper.MapToDetailModel(foundGameEntity);
+        return ModelMapper.MapToDetailModel(gameEntity);
+    }
+
+    public override async Task DeleteAsync(Guid id)
+    {
+        await using IUnitOfWork uow = UnitOfWorkFactory.Create();
+
+        var gameRepo = uow.GetRepository<GameEntity, GameEntityMapper>();
+        var gameToCheck = new GameEntity()
+        {
+            Id = id,
+            Name = string.Empty,
+            Pegi = Pegi.Unknown,
+            Genre = Genre.Unknown
+        };
+
+        if (await gameRepo.ExistAsync(gameToCheck))
+        {
+            await gameRepo.DeleteAsync(id);
+            await uow.CommitAsync();
+        }
     }
 }

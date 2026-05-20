@@ -5,5 +5,5 @@ namespace FitGames.app.Services;
 
 public class UserSessionService : IUserSessionService
 {
-    public UserListModel? CurrentUser { get; set; }
+    public UserDetailModel? CurrentUser { get; set; }
 }

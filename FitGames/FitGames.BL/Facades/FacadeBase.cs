@@ -27,7 +27,7 @@ public abstract class
 
     protected virtual ICollection<string> IncludesNavigationPathDetail => new List<string>();
 
-    public async Task DeleteAsync(Guid id)
+    public virtual async Task DeleteAsync(Guid id)
     {
         await using IUnitOfWork uow = UnitOfWorkFactory.Create();
         try

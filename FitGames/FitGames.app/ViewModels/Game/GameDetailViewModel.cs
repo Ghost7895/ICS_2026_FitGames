@@ -108,6 +108,16 @@ public partial class GameDetailViewModel(
     }
 
     [RelayCommand]
+    private async Task DeleteGameAsync()
+    {
+        if (Game == null) return;
+
+        await gameFacade.DeleteAsync(Game.Id);
+        WeakReferenceMessenger.Default.Send(new GameDeleteMessage());
+        await navigationService.GoToAsync("..");
+    }
+
+    [RelayCommand]
     private async Task HandleGameActionAsync()
     {
 

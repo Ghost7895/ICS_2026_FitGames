@@ -4,5 +4,5 @@ namespace FitGames.app.Services.Interfaces;
 
 public interface IUserSessionService
 {
-    UserListModel? CurrentUser { get; set; }
+    UserDetailModel? CurrentUser { get; set; }
 }

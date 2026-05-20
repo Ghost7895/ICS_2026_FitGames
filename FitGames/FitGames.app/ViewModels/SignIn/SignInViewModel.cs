@@ -1,9 +1,10 @@
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FitGames.app.Services.Interfaces;
+using FitGames.BL.Facades;
 using FitGames.BL.Facades.Interfaces;
 using FitGames.BL.Models;
+using System.Collections.ObjectModel;
 
 namespace FitGames.app.ViewModels.SignIn;
 
@@ -37,7 +38,7 @@ public partial class SignInViewModel : ViewModelBase
     [RelayCommand]
     private async Task SelectUserAsync(UserListModel user)
     {
-        _sessionService.CurrentUser = user;
+        _sessionService.CurrentUser = await _userFacade.GetAsync(user.Id); ;
         await _navigationService.GoToAsync("//home");
     }
 

@@ -47,7 +47,7 @@
         </Border>
 
         <ScrollView Grid.Row="1">
-            <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto"  RowSpacing="10">
+            <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto"  RowSpacing="10">
 
 
                 <Border Grid.Row="0" HeightRequest="420" HorizontalOptions="Center">
@@ -270,6 +270,34 @@
                        Aspect="AspectFit"
                        VerticalOptions="Center"
                        HorizontalOptions="End" />
+
+                <Border Grid.Row="6" 
+                        BackgroundColor="DarkRed"
+                        Stroke="Transparent"
+                        HeightRequest="50"
+                        HorizontalOptions="Fill">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeleteGameCommand}" />
+                    </Border.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.1" />
+                                    <Setter Property="Opacity" Value="0.85" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Label Text="Remove game from store"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                           FontSize="13" FontAttributes="Bold"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
             </Grid>
         </ScrollView>
 

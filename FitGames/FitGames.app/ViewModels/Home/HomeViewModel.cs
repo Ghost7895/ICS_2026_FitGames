@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using FitGames.app.Messages;
 using FitGames.app.Services;
 using FitGames.app.Services.Interfaces;
 using FitGames.app.ViewModels.Game;
@@ -15,7 +17,6 @@ public partial class HomeViewModel : ViewModelBase
 {
     private readonly IGameFacade _gameFacade;
     private readonly IUserSessionService _sessionService;
-    private readonly IUserFacade _userFacade;
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
@@ -28,7 +29,23 @@ public partial class HomeViewModel : ViewModelBase
         => _ = LoadGamesAsync();
 
     [ObservableProperty]
+    public partial string AddNameInput { get; set; } = string.Empty;
+    [ObservableProperty]
+    public partial string AddDescriptionInput { get; set; } = string.Empty;
+    [ObservableProperty]
+    public partial string AddDeveloperNameInput { get; set; } = string.Empty;
+    [ObservableProperty]
+    public partial string AddImageUrlInput { get; set; } = string.Empty;
+    [ObservableProperty]
+    public partial Genre AddSelectedGenre { get; set; } = Genre.Unknown;
+    [ObservableProperty]
+    public partial Pegi AddSelectedPegi { get; set; } = Pegi.Unknown;
+
+    [ObservableProperty]
     public partial bool IsFilterVisible { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsAddGameVisible { get; set; }
 
     [ObservableProperty]
     public partial Genre? SelectedGenre { get; set; }
@@ -50,14 +67,12 @@ public partial class HomeViewModel : ViewModelBase
 
     public HomeViewModel(
         IGameFacade gameFacade,
-        IUserFacade userFacade,
         INavigationService navigationService,
         IMessengerService messengerService,
         IUserSessionService sessionService) 
         : base(messengerService)
     {
         _gameFacade = gameFacade;
-        _userFacade = userFacade;
         _sessionService = sessionService;
         _navigationService = navigationService;
     }
@@ -87,6 +102,50 @@ public partial class HomeViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void ToggleAddGame()
+    {
+        IsAddGameVisible = !IsAddGameVisible;
+        AddNameInput = string.Empty;
+        AddDescriptionInput = string.Empty;
+        AddDeveloperNameInput = string.Empty;
+        AddImageUrlInput = string.Empty;
+        AddSelectedGenre = Genre.Unknown;
+        AddSelectedPegi = Pegi.Unknown;
+    }
+
+    [RelayCommand]
+    private async Task AddNewGameAsync()
+    {
+
+        var newGame = new GameDetailModel
+        {
+            Id = Guid.Empty,
+            Name = AddNameInput?.Trim() ?? string.Empty,
+            Description = AddDescriptionInput?.Trim() ?? string.Empty,
+            Genre = AddSelectedGenre,
+            Pegi = AddSelectedPegi,
+            DeveloperName = AddDeveloperNameInput?.Trim() ?? "unknown"
+        };
+
+        if (!string.IsNullOrWhiteSpace(AddImageUrlInput))
+        {
+            string tmpUrl = AddImageUrlInput.Trim();
+            if (Uri.TryCreate(tmpUrl, UriKind.Absolute, out var validatedUri))
+            {
+                newGame.ImageUrl = validatedUri.ToString();
+            }
+            else
+            {
+                await Shell.Current.DisplayAlertAsync("Error", "Invalid URL detected.", "OK");
+                return;
+            }
+        }
+
+        var game = await _gameFacade.SaveAsync(newGame);
+        WeakReferenceMessenger.Default.Send(new GameEditMessage { GameId = game.Id });
+    }
+
+    [RelayCommand]
     private void ToggleSort()
     {
         SortAscending = !SortAscending;
@@ -106,18 +165,14 @@ public partial class HomeViewModel : ViewModelBase
     [RelayCommand]
     private async Task GoToDetailAsync(Guid id)
     {
-        var currentUser = _sessionService.CurrentUser;
-        if (currentUser is null) throw new ArgumentNullException(nameof(currentUser), "currentUser cannot be null");
-
-        var userDetail = await _userFacade.GetAsync(currentUser.Id);
-        if (userDetail is null) throw new ArgumentNullException(nameof(userDetail), "userDetail cannot be null");
+        if (_sessionService.CurrentUser is null) throw new ArgumentNullException(nameof(_sessionService.CurrentUser), "currentUser cannot be null");
 
         await _navigationService.GoToAsync(
             NavigationService.GameDetailRouteRelative,
             new Dictionary<string, object?>
             {
                 [nameof(GameDetailViewModel.Id)] = id,
-                ["LibraryId"] = userDetail.LibraryId,
+                ["LibraryId"] = _sessionService.CurrentUser.LibraryId,
                 ["IsHome"] = true
             });
     }

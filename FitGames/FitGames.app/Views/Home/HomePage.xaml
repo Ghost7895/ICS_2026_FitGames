@@ -63,7 +63,7 @@
         <!-- Search Bar a Filter Tlačidlo -->
         <Grid Grid.Row="1"
               Margin="20,0"
-              ColumnDefinitions="*, Auto, Auto"
+              ColumnDefinitions="*, Auto, Auto, Auto"
               ColumnSpacing="15"
               HeightRequest="45">
               
@@ -135,7 +135,143 @@
                 </VisualStateManager.VisualStateGroups>
                 <Image Source="filter.png" />
             </Border>
+
+            <Border Grid.Column="3"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                    Stroke="Transparent"
+                    WidthRequest="50"
+                    VerticalOptions="Fill">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleAddGameCommand}" />
+                </Border.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="1.1" />
+                                <Setter Property="Opacity" Value="0.85" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Label Text="+"
+           TextColor="{AppThemeBinding Light=Black, Dark=Black}"
+           FontSize="20" FontAttributes="Bold"
+           HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
         </Grid>
+
+        <ScrollView Grid.Row="2" Margin="20,0" VerticalOptions="Start" MaximumHeightRequest="400">
+            <VerticalStackLayout
+                IsVisible="{Binding IsAddGameVisible}" 
+                BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2C2C2C}" 
+                Padding="15"
+                Spacing="10"
+                Margin="0,10">
+
+                <Label Text="Add New Game" FontAttributes="Bold" FontSize="16" HorizontalOptions="Center" />
+
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Game Name:" FontSize="12" />
+                    <Entry Text="{Binding AddNameInput, Mode=TwoWay}"
+               Placeholder="Enter game title..." />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Description:" FontSize="12" />
+                    <Entry Text="{Binding AddDescriptionInput, Mode=TwoWay}"
+               Placeholder="Enter game description..." />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Developer Name:" FontSize="12" />
+                    <Entry Text="{Binding AddDeveloperNameInput, Mode=TwoWay}"
+               Placeholder="Enter developer company..." />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Cover Image URL:" FontSize="12" />
+                    <Entry Text="{Binding AddImageUrlInput, Mode=TwoWay}" 
+            Placeholder="https://example.com/image.png" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Select Genre:" FontSize="12" />
+                    <Picker ItemsSource="{Binding AvailableGenres}" 
+            SelectedItem="{Binding AddSelectedGenre}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Select PEGI Rating:" FontSize="12" />
+                    <Picker ItemsSource="{Binding AvailablePegis}" 
+            SelectedItem="{Binding AddSelectedPegi}" />
+                </VerticalStackLayout>
+
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="10" Margin="0,10,0,0">
+                    <Border Grid.Column="0"
+                BackgroundColor="Grey"
+                WidthRequest="350"
+                Stroke="Transparent"
+                Padding="10"
+                VerticalOptions="Fill">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleAddGameCommand}" />
+                        </Border.GestureRecognizers>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="Scale" Value="1.1" />
+                                        <Setter Property="Opacity" Value="0.85" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Label Text="Cancel"
+                   TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                   FontSize="13" FontAttributes="Bold"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+
+                    <Border Grid.Column="1" 
+                BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                Stroke="Transparent"
+                WidthRequest="350"
+                Padding="10"
+                VerticalOptions="Fill">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AddNewGameCommand}" />
+                        </Border.GestureRecognizers>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="Scale" Value="1.1" />
+                                        <Setter Property="Opacity" Value="0.85" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Label Text="Add New Game"
+                   TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                   FontSize="13" FontAttributes="Bold"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
 
         <!-- Filter Sekcia (Skrytá defaultne) -->
         <Border Grid.Row="2"
